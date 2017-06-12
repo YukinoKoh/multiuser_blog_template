@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid form-container"><div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="brand-field">
+        <img src="/img/0_logo.svg" alt={{sitename}} class="signup-logo">  
+    </div>
+    <form method="post">
+      <div class="signup-field">  
+        <div class="form-field">
+          <p class="error">{{error}}</p>
+          <input name="username" class="form-input" placeholder="Username" value="{{username}}">
+        </div>
+        <div class="form-field">
+          <input name="password" class="form-input" placeholder="Passowrd" value="{{password}}">
+        </div>
+      </div>
+      <div class="submit-field text-center">
+        <input type="submit" class="signup-submit" value="Log in" >
+      </div>
+    </form>
+  </div>
+</div></div>
+{% endblock %}
