@@ -150,6 +150,7 @@ class SignUp(Handler):
 
             self.redirect('/welcome')
 
+
 class Login(Handler):
     def get(self):
         self.render("login.html", sitename=sitename)
@@ -173,6 +174,14 @@ class Login(Handler):
         params = dict(sitename=sitename, error=error, username=username, password=password)
         self.render('login.html', **params)
 
+
+class Logout(Handler):
+    def get(self):
+        self.response.delete_cookie('user_id')
+        self.redirect('/signup')
+
+
+
 class WelcomePage(Handler):
     def get(self):
         user_id = self.request.cookies.get('user_id')
@@ -186,5 +195,6 @@ class WelcomePage(Handler):
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signup', SignUp),
                                ('/login', Login),
+                               ('/logout', Logout),
                                ('/welcome', WelcomePage)],
                               debug=True)
