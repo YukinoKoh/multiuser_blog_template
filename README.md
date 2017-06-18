@@ -8,11 +8,7 @@ This app includes..
 - Sign up/sign in function
 - Add/Edit/Delete notes function
 
-![signup sample image](img/sample_signup.jpg)
-
-![notes sample image](img/sample_note.jpg)
-
-![notes sample image](img/sample_about.jpg)
+![notes sample image](img/sample_screen.jpg)
 
 
 ## File structure
