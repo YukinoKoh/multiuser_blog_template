@@ -1,12 +1,4 @@
-@import url(http://weloveiconfonts.com/api/?family=typicons);
-
-/* typicons */
-[class*="typicons-"]:before {
-  font-family: 'Typicons', sans-serif;
-}
-
 $font: 'Open Sans Condensed', sans-serif;
-$font_body: 'Open Sans', sans-serif;
 $font_body_sp: 0.5px;
 $font_title_weight: bold;
 $font_title_case: capitalize;

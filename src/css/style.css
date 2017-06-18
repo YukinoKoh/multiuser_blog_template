@@ -1,8 +1,3 @@
-@import url(http://weloveiconfonts.com/api/?family=typicons);
-/* typicons */
-[class*="typicons-"]:before {
-  font-family: 'Typicons', sans-serif; }
-
 /* common */
 body {
   font-family: "Open Sans Condensed", sans-serif;
