@@ -26,6 +26,18 @@ a:hover {
 .action-link a, .action-link a:focus, .action-link a:link, .action-link a:visited {
   color: #80b7d1; }
 
+.like {
+  color: #dcdddf; }
+
+.like a {
+  color: #dcdddf; }
+
+.liked {
+  color: #f7d1e6; }
+
+.liked {
+  color: #f7d1e6; }
+
 /* image */
 .img-responsive {
   margin: 0 auto; }
@@ -88,15 +100,24 @@ a:hover {
   font-size: 14px;
   letter-spacing: 0.5px;
   color: #8a8a8a;
-  padding: 8px; }
+  padding: 8px;
+  float: left; }
 
 .note-info a {
   color: #80b7d1; }
 
+.note-like {
+  padding: 8px;
+  float: right;
+  color: #f7d1e6; }
+
+.note-like a {
+  color: #f7d1e6; }
+
 .note-content {
   letter-spacing: 0.5px;
   color: #525252;
-  padding: 16px 8px; }
+  padding: 0 8px; }
 
 /* notes main page */
 .notes-field {
@@ -149,6 +170,17 @@ a:hover {
   position: absolute;
   bottom: 8px;
   padding: 8px; }
+
+.notes-like {
+  padding: 8px;
+  position: absolute;
+  bottom: 8px;
+  padding: 8px;
+  right: 8px;
+  color: #f7d1e6; }
+
+.notes-like a {
+  color: #f7d1e6; }
 
 @media screen and (max-width: 768px) {
   .notes-field {

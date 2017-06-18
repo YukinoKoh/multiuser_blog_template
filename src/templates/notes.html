@@ -15,6 +15,14 @@
           ...
           {% endif %}</div>
           <div class="notes-name">{{note.name}}</div>
+          <div class="notes-like">
+            <div class="{{ note.get_style(name) }}">
+              <a href="/like/{{ note.key().id() }}/{{ name }}/1">
+                <span class="glyphicon glyphicon-heart{{ note.get_icon(name) }}"></span>
+                {{ note.count_like() }}
+              </a>
+            </div>
+          </div>
         </div>
       </a>
     </div>

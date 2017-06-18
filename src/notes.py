@@ -66,6 +66,7 @@ class Note(db.Model):
     name = db.StringProperty(required=True)
     title = db.TextProperty(required=True)
     content = db.TextProperty(required=True)
+    like = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
 
@@ -74,6 +75,31 @@ class Note(db.Model):
     def by_id(cls, uid):
         return Note.get_by_id(uid, parent=note_key())
 
+    def check_like(cls, name):
+        like_list = str(cls.like).split(',')
+        return name in like_list
+
+    def count_like(cls):
+        like_list = str(cls.like).split(',')
+        count = len(like_list)-1
+        if count > 0:
+            return count
+        else:
+            return ''
+
+    def get_style(cls, name):
+        style = ''
+        if cls.check_like(name):
+            style = 'liked'
+        else:
+            style = 'like'
+        return style
+
+    def get_icon(cls, name):
+        icon = ''
+        if not cls.check_like(name):
+            icon = '-empty'
+        return icon
 
 # Site front
 # base handler
@@ -229,8 +255,9 @@ class MainPage(NotesHandler):
             name = 'Instruction'
             title = 'First coffee note'
             content = 'Next holiday plan will be ...'
+            like = 'Instruction'
             note = Note(parent=note_key(), name=name, title=title,
-                        content=content)
+                        content=content, like=like)
             note.put()
         else:
             pass
@@ -242,6 +269,7 @@ class NotePage(NotesHandler):
         name = self.get_or_signout_cookie()
         note = Note.by_id(int(note_id))
         content = note.content.replace('\n', '<br>')
+        like = ''
         self.render("note.html", name=name, sitename=sitename, note=note,
                     content=content)
 
@@ -256,9 +284,10 @@ class NewNote(NotesHandler):
         title = self.request.get("title")
         content = self.request.get("content")
         name = self.get_cookie()
+        like = ''
         if title and content:
             note = Note(parent=note_key(), name=name, title=title,
-                        content=content)
+                        content=content, like=like)
             note.put()
             note_id = note.key().id()
             self.redirect('/note/'+str(note_id))
@@ -290,8 +319,7 @@ class EditNote(NotesHandler):
 
 
 # delete a note
-class DeletePage(NotesHandler):
-        # self.render("welcome.html", sitename=sitename)
+class DeleteNote(NotesHandler):
     def get(self, note_id):
         name = self.get_or_signout_cookie()
         note = Note.by_id(int(note_id))
@@ -303,6 +331,22 @@ class DeletePage(NotesHandler):
             message = 'We can\'t find the note.'
         self.render("message.html", name=name, sitename=sitename,
                     message=message)
+
+
+# like a note
+class LikeNote(NotesHandler):
+    def get(self, note_id, name, page_num):
+        note = Note.by_id(int(note_id))
+        if not note.check_like(name):
+            like = str(note.like)+','+name
+            note.like = like
+            note.put()
+
+        if int(page_num) == 0:
+            url = '/note/'+note_id
+        else:
+            url = '/'
+        self.redirect(url) 
 
 
 # page for new uesr to have a glance
@@ -320,7 +364,8 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signin', Signin),
                                ('/signout', Signout),
                                ('/newnote', NewNote),
-                               ('/delete/([0-9]+)', DeletePage),
+                               ('/delete/([0-9]+)', DeleteNote),
+                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9])', LikeNote),
                                ('/note/([0-9]+)', NotePage),
                                ('/u-([a-zA-Z0-9_-]+)/([0-9]+)', EditNote),
                                ('/about', About)],

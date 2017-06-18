@@ -22,6 +22,7 @@ $color_mono_7: #f7f7f7;
 $color_mono_8: #fafafa;
 
 $color_error: #f3bca9;
+$color_like: #f7d1e6;
 
 $m0: 4px;
 $m1: 8px;
@@ -73,6 +74,20 @@ a:hover{
 
 .action-link a, .action-link a:focus, .action-link a:link, .action-link a:visited{
   color: $color_brand_1;
+}
+
+
+.like{
+  color: $color_mono_5;
+}
+.like a{
+  color: $color_mono_5;
+}
+.liked{
+  color: $color_like;
+}
+.liked{
+  color: $color_like;
 }
 
 
@@ -164,6 +179,7 @@ a:hover{
   letter-spacing: $font_body_sp; 
   color: $color_mono_4;
   padding: $m1;
+  float: left;
 }
 
 .note-info a{
@@ -171,10 +187,20 @@ a:hover{
 }
 
 
+.note-like{
+  padding: $m1;
+  float: right;
+  color: $color_like;
+}
+.note-like a{
+  color: $color_like;
+}
+
+
 .note-content{
   letter-spacing: $font_body_sp;
   color: $color_mono_3;
-  padding: $m2 $m1;
+  padding: 0 $m1;
 }
 
 
@@ -246,6 +272,18 @@ a:hover{
   padding: $m1;
 }
 
+
+.notes-like{
+  padding: $m1;
+  position: absolute;
+  bottom: $m1;
+  padding: $m1;
+  right: $m1;
+  color: $color_like;
+}
+.notes-like a{
+  color: $color_like;
+}
 
 @media screen and (max-width: 768px) {
   .notes-field{
