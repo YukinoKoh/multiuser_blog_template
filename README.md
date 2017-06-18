@@ -7,8 +7,11 @@ This app includes..
 - About page as app introduction
 - Sign up/sign in function
 - Add/Edit/Delete notes function
+
 ![signup sample image](img/sample_signup.jpg)
+
 ![notes sample image](img/sample_note.jpg)
+
 ![notes sample image](img/sample_about.jpg)
 
 
@@ -63,7 +66,7 @@ You can change hash method. For example, around these codes.
 def hash_str(s):
     return hmac.new(SECRET, s).hexdigest()
 ``` 
-or 
+and/or 
 ```
 h = hashlib.sha256(name+pw+salt).hexdigest()
 ```
@@ -71,16 +74,16 @@ h = hashlib.sha256(name+pw+salt).hexdigest()
 ### Basic Branding
 
 ##### Set logo
-Replace `0\_logo.svg` in `src`/`img` with your logo file with the same name.
+Replace `0_logo.svg` in `src`/`img` with your logo file with the same name.
 
 ##### Set name
-Modify *sitename* variable in `notes.py`  
+`sitename` in `notes.py` will be applied all pages in this app  
 ```
 sitename = 'Your blog name'
 ```
 
 ##### Set color
-Modify *$color_brand* in `style.scss` in `sass` 
+`$color_brand` in `style.scss` in `sass` will be applied to link texts in this app 
 
 
 ### Database
