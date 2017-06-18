@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container"><div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <form method="post" class="post-form">
+      <div class="error">{{error}}</div>
+      <input type="text" name="title" class="newnote-title" 
+                placeholder='Title' value="{{title}}">
+      <hr class="note-border">
+      <textarea name="content" class="form-input newnote-content" placeholder='Write a note'>{{content}}</textarea>
+      <br>
+      {% if note_id %}
+        <a href="/note/{{note_id}}" class="action-link">
+      {% else %}
+        <a href="/" class="action-link">
+      {% endif %}
+      Cancel</a> | <input type="submit" class="newnote-submit action-link" value="Share">
+    </form>
+  </div>
+</div></div>
+
+{% endblock %}
+

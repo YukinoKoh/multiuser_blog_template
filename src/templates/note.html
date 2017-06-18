@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row note-row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <p class="note-title">{{note.title}}</p>
+      <hr class="note-border">
+      <div class="note-info">
+        {{note.name}} | {{note.created}}
+        | <a href="/u-{{name}}/{{note.key().id()}}">Edit</a> 
+        | <a href="/delete/{{note.key().id()}}">Delete</a>
+      </div>
+        <!-- any white space witll stay as space -->
+      <p class="note-content">{{content | safe }}</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

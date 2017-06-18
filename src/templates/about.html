@@ -1,0 +1,40 @@
+{% extends "base_intro.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      <picture>
+        <source media="screen and (max-width:767px)"
+                srcset="img/sample_mobile_l_2x.jpg 2x, 
+                        img/sample_mobile_l_1x.jpg 1x">
+        <source media="screen and (min-width:768px) and (max-width:991px)"
+                srcset="img/sample_mobile_s_2x.jpg 2x, 
+                        img/sample_mobile_s_1x.jpg 1x">
+        <source media="(min-width:992px)"
+                srcset="img/sample_mobile_l_2x.jpg 2x, 
+                        img/sample_mobile_l_1x.jpg 1x">
+        <img src="img/sample_mobile_l_sx.jpg" class="img-responsive" alt="sample image of mobile">
+      </picture>
+    </div>
+    <div class="col-md-8 hidden-md-down">
+      <picture>
+        <source media="screen and (max-width:991px)"
+                srcset="img/sample_pc_s_2x.jpg 2x, 
+                        img/sample_pc_s_1x.jpg 1x">
+        <source media="(min-width:992px)"
+                srcset="img/sample_pc_xl_2x.jpg 2x, 
+                        img/sample_pc_xl_1x.jpg 1x">
+        <img src="img/sample_pc_xl_2x.jpg" class="img-responsive" alt="sample image of note">
+      </picture>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <p>Coffee notes is a web app to share little ideas</p>
+      <a href="/signup" class="action-link">Sign up</a> | <a href="/signin" class="action-link">Sign in</a>  
+    </div>
+  </div>
+</div></div>
+{% endblock %}

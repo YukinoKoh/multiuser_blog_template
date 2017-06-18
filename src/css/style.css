@@ -1,68 +1,227 @@
+@import url(http://weloveiconfonts.com/api/?family=typicons);
+/* typicons */
+[class*="typicons-"]:before {
+  font-family: 'Typicons', sans-serif; }
+
+/* common */
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans Condensed", sans-serif;
   font-size: 16px;
   margin: 0;
   padding: 0; }
 
-.form-container {
+a:hover {
+  text-decoration: none; }
+
+/* layout */
+.w100 {
+  width: 100%; }
+
+.mt-3 {
+  margin-top: 24px; }
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+  padding: 0; }
+
+.action-link {
+  color: #80b7d1; }
+
+.action-link a, .action-link a:focus, .action-link a:link, .action-link a:visited {
+  color: #80b7d1; }
+
+/* image */
+.img-responsive {
+  margin: 0 auto; }
+
+.hidden-md-down {
+  visibility: visible; }
+
+@media screen and (max-width: 767px) {
+  .hidden-md-down {
+    visibility: hidden;
+    height: 0; } }
+
+/* site common header */
+.top-header {
+  padding: 16px;
+  background-color: #f7f7f7; }
+
+.top {
+  margin: 0; }
+
+.top-logo {
+  height: 30px;
+  margin-right: 8px; }
+
+.top-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: capitalize; }
+
+.top-title a {
+  color: #020202; }
+
+.top-status {
+  float: right;
+  padding-top: 4px; }
+
+.top-button {
+  border: none;
+  background-color: #f7f7f7; }
+
+/* individual note page */
+.note-row {
+  margin: 32px 24px; }
+
+.newnote-title, .note-title {
+  width: 100%;
+  font-weight: bold;
+  font-size: 23px;
+  color: #020202;
+  margin-top: 24px;
+  padding: 0 8px; }
+
+.note-border {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #525252; }
+
+.note-info {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #8a8a8a;
+  padding: 8px; }
+
+.note-info a {
+  color: #80b7d1; }
+
+.note-content {
+  letter-spacing: 0.5px;
+  color: #525252;
+  padding: 16px 8px; }
+
+/* notes main page */
+.notes-field {
+  background-color: #fafafa;
+  height: 100vh; }
+
+.notes-row {
+  margin: 8px 0; }
+
+@media screen and (min-width: 900px) {
+  .notes-row {
+    margin: 8px 24px; } }
+
+.notes {
+  position: relative;
+  height: 200px;
+  margin: 8px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 6px;
+  border-right: #f0f0f0 1px solid;
+  border-bottom: #dcdddf 2px solid; }
+
+.notes-title {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-weight: bold;
+  font-size: 23px;
+  color: #020202;
+  margin-top: 24px;
+  padding: 8px 8px 0 8px;
+  background-color: #fff;
+  border: none; }
+
+.notes-border {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #525252; }
+
+.notes-content {
+  color: #525252;
+  letter-spacing: 0.5px;
+  padding: 16px 8px;
+  visibility: visible; }
+
+.notes-name {
+  font-size: 14px;
+  color: #8a8a8a;
+  letter-spacing: 0.5px;
+  position: absolute;
+  bottom: 8px;
+  padding: 8px; }
+
+@media screen and (max-width: 768px) {
+  .notes-field {
+    padding: 0;
+    background-color: #fff; }
+  .notes {
+    height: 100px;
+    margin: 0;
+    border-radius: 0;
+    border-bottom: #f0f0f0 1px solid; }
+  .notes-title {
+    margin-top: 8px;
+    font-size: 18px; }
+  .notes-border {
+    border-top: none; }
+  .notes-content {
+    visibility: hidden; }
+  .notes-name {
+    bottom: 16px; } }
+
+/* newnote page */
+.newnote-title {
+  border: none; }
+
+.newnote-content {
+  height: 200px; }
+
+.newnote-submit {
+  border: none;
+  background-color: #fff;
+  margin-bottom: 0; }
+
+/* sign up, sign in */
+.sign-container {
   background-color: #f0f0f0;
   height: 100vh; }
 
-.brand-field {
-  background-color: #dcdddf;
-  text-align: center;
-  padding: 48px;
-  margin: 24px 24px 0 24px;
-  border-radius: 8px 8px 0 0 / 8px 8px 0 0; }
-
-.signup-logo {
-  height: 60px; }
-
-.signup-field {
+.sign-field {
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 24px;
   background-color: #fff;
-  padding: 40px;
-  margin: 0 24px; }
+  text-align: center; }
 
 .form-field {
   height: 72px;
   position: relative; }
 
-.error {
-  color: #e85757;
-  margin-bottom: 0;
-  position: absolute;
-  top: 0;
-  z-index: 2; }
-
 .form-input {
   margin-top: 24px;
   width: 100%;
   padding: 6px;
-  border: 1px solid #232323;
+  border: 1px solid #dcdddf;
   border-radius: 4px;
   background-color: #fff; }
 
-textarea, select {
-  font-family: "Open Sans", sans-serif;
-  padding: 4px;
-  margin: 8px 10px;
-  display: inline-block;
-  border: 1px solid #020202;
-  width: 100%;
-  border-radius: 4px;
-  box-sizing: border-box; }
+.sign-action {
+  border: none;
+  margin-bottom: 0;
+  background-color: #fff; }
 
-.submit-field {
-  background-color: #c3dfe0;
-  padding: 32px;
-  margin: 0 24px 24px 24px;
-  border-radius: 0 0 8px 8px / 0 0 8px 8px; }
+.error {
+  color: #f3bca9;
+  margin-bottom: 0;
+  position: absolute;
+  top: 0; }
 
-.signup-submit {
-  background-color: #c3dfe0;
-  font-family: "Open Sans", sans-serif;
-  color: #525252;
-  border: none; }
-
-.signup-submit:hover {
-  color: #232323; }
+/* message page */
+.message {
+  margin-top: 32px;
+  text-align: center; }

@@ -8,7 +8,7 @@ handlers:
 - url: /css
   static_dir: css
 - url: /.*
-  script: blog.app
+  script: notes.app
 
 libraries:
 - name: jinja2

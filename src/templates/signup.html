@@ -1,35 +1,36 @@
-{% extends "base.html" %}
+{% extends "base_intro.html" %}
 
 {% block content %}
 
-<div class="container-fluid form-container"><div class="row">
+<div class="container-fluid sign-container"><div class="row">
   <div class="col-sm-6 col-sm-offset-3">
-    <div class="brand-field">
-        <img src="/img/0_logo.svg" alt={{sitename}} class="signup-logo">  
+    <div class="sign-field text-center">
+      <form method="post">
+          <div class="form-field">
+            <p class="error">{{name_error}}</p>
+            <input name="name" class="form-input" placeholder="Username" value="{{name}}">
+          </div>
+          <div class="form-field">
+            <p class="error">{{pw_error}}</p>
+            <input name="pw" class="form-input" placeholder="Passowrd" value="{{pw}}">
+          </div>
+          <div class="form-field">
+            <p class="error">{{verify_error}}</p>
+            <input name="verify" class="form-input" placeholder="Verify password" value="{{verify}}">
+          </div>
+          <div class="form-field">
+            <p class="error">{{email_error}}</p>
+            <input name="email" class="form-input" placeholder="Email (optional)" value="{{email}}">
+          </div>
+        <input type="submit" class="sign-action action-link" value="Sign up" >
+      </form>
     </div>
-    <form method="post">
-      <div class="signup-field">  
-        <div class="form-field">
-          <p class="error">{{username_error}}</p>
-          <input name="username" class="form-input" placeholder="Username" value="{{username}}">
-        </div>
-        <div class="form-field">
-          <p class="error">{{password_error}}</p>
-          <input name="password" class="form-input" placeholder="Passowrd" value="{{password}}">
-        </div>
-        <div class="form-field">
-          <p class="error">{{verify_error}}</p>
-          <input name="verify" class="form-input" placeholder="Verify password" value="{{verify}}">
-        </div>
-        <div class="form-field">
-          <p class="error">{{email_error}}</p>
-          <input name="email" class="form-input" placeholder="Email (optional)" value="{{email}}">
-        </div>
-      </div>
-      <div class="submit-field text-center">
-        <input type="submit" class="signup-submit" value="Sign up" >
-      </div>
-    </form>
+    <div class="sign-field">
+      <p class="sign-action action-link"><a href="/signin">Sign in</a></p>
+    </div>
+    <div class="sign-field">
+      <p class="sign-action action-link"><a href="/about">About</a></p>
+    </div>
   </div>
 </div></div>
 {% endblock %}

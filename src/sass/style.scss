@@ -1,21 +1,37 @@
-$font: 'Open Sans', sans-serif;
-$font-size: 16px;
-$font-size-header: 24px;
-$font-size-small: 10px;
+@import url(http://weloveiconfonts.com/api/?family=typicons);
 
-$color_brand: #c3dfe0; 
-$color_brand_2: #fa6561;
-$color_brand_3: #ea9793;
+/* typicons */
+[class*="typicons-"]:before {
+  font-family: 'Typicons', sans-serif;
+}
+
+$font: 'Open Sans Condensed', sans-serif;
+$font_body: 'Open Sans', sans-serif;
+$font_body_sp: 0.5px;
+$font_title_weight: bold;
+$font_title_case: capitalize;
+$font_size_2: 23px;
+$font_size_3: 18px;
+$font_size_4: 16px;
+$font_size_5: 14px;
+$font_size_6: 10px;
+$font-size: $font_size_4;
+
+$color_brand_1: #80b7d1;
 
 $color_mono: #020202;
+$color_mono_1: #061f26;
 $color_mono_2: #232323;
 $color_mono_3: #525252;
-$color_mono_4: #dadada;
+$color_mono_4: #8a8a8a;
 $color_mono_5: #dcdddf;
 $color_mono_6: #f0f0f0;
+$color_mono_7: #f7f7f7;
+$color_mono_8: #fafafa;
 
-$color_error: #e85757;
+$color_error: #f3bca9;
 
+$m0: 4px;
 $m1: 8px;
 $m2: 16px;
 $m3: 24px;
@@ -27,6 +43,7 @@ $m8: 64px;
 $m9: 72px;
 
 
+/* common */
 body{
   font-family: $font;
   font-size: $font-size;
@@ -35,30 +52,267 @@ body{
 }
 
 
-.form-container{
+a:hover{
+  text-decoration: none;
+}
+
+
+/* layout */
+.w100{
+  width: 100%;
+}
+
+
+.mt-3{
+  margin-top: $m3;
+}
+
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+  padding: 0;
+}
+
+
+.action-link{
+  color: $color_brand_1;
+}
+
+.action-link a, .action-link a:focus, .action-link a:link, .action-link a:visited{
+  color: $color_brand_1;
+}
+
+
+/* image */
+.img-responsive{
+  margin: 0 auto;
+}
+
+
+.hidden-md-down{
+  visibility: visible;
+}
+
+@media screen and (max-width: 767px) {
+  .hidden-md-down{
+    visibility: hidden;
+    height: 0;
+  }
+}
+
+
+/* site common header */
+.top-header{
+  padding: $m2;
+  background-color: $color_mono_7;
+}
+
+
+.top{
+  margin: 0;
+}
+
+
+.top-logo{
+  height: 30px;
+  margin-right: $m1; 
+}
+
+
+.top-title{
+  font-size: 24px;
+  font-weight: $font_title_weight;
+  text-transform: $font_title_case;
+}
+
+.top-title a{
+  color: $color_mono;
+}
+
+
+.top-status{
+  float: right;
+  padding-top: $m0;
+}
+
+
+.top-button{
+  border:none;
+  background-color: $color_mono_7;
+}
+
+
+/* individual note page */
+.note-row{
+  margin: $m4 $m3;
+}
+ 
+
+.newnote-title, .note-title{
+  width: 100%;
+  font-weight: bold;
+  font-size: $font_size_2;
+  color: $color_mono;
+  margin-top: $m3;
+  padding: 0 $m1;
+}
+
+
+.note-border{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid $color_mono_3;
+}
+
+
+.note-info{
+  font-size: $font_size_5;
+  letter-spacing: $font_body_sp; 
+  color: $color_mono_4;
+  padding: $m1;
+}
+
+.note-info a{
+  color: $color_brand_1;
+}
+
+
+.note-content{
+  letter-spacing: $font_body_sp;
+  color: $color_mono_3;
+  padding: $m2 $m1;
+}
+
+
+
+/* notes main page */
+.notes-field{
+  background-color: $color_mono_8;
+  height: 100vh;
+}
+
+
+.notes-row{
+  margin: $m1 0;
+}
+
+@media screen and (min-width: 900px) {
+  .notes-row{
+    margin: $m1 $m3;
+  }
+}
+
+
+.notes{
+  position: relative;
+  height: 200px;
+  margin: $m1;
+  padding: $m1;
+  background-color: #fff;
+  border-radius: 6px;
+  border-right: $color_mono_6 1px solid;
+  border-bottom: $color_mono_5 2px solid;
+}
+
+
+.notes-title{
+  font-family: $font;
+  font-weight: bold;
+  font-size: $font_size_2;
+  color: $color_mono;
+  margin-top: $m3;
+  padding: $m1 $m1 0 $m1;
+  background-color: #fff;
+  border: none;
+}
+
+
+.notes-border{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid $color_mono_3;
+}
+
+
+.notes-content{
+  color: $color_mono_3;
+  letter-spacing: $font_body_sp;
+  padding: $m2 $m1;
+  visibility: visible;
+}
+
+
+.notes-name{
+  font-size: $font_size_5;
+  color: $color_mono_4;
+  letter-spacing: $font_body_sp; 
+  position: absolute;
+  bottom: $m1;
+  padding: $m1;
+}
+
+
+@media screen and (max-width: 768px) {
+  .notes-field{
+    padding: 0;
+    background-color: #fff;
+  }
+  .notes{
+    height: 100px;
+    margin: 0;
+    border-radius: 0;
+    border-bottom: $color_mono_6 1px solid;
+  }  
+  .notes-title{
+    margin-top: $m1;
+    font-size: $font_size_3;
+  }
+  .notes-border{
+    border-top: none; 
+  }
+  .notes-content{
+    visibility: hidden;
+  }
+  .notes-name{
+    bottom: $m2;
+  }
+}
+
+
+/* newnote page */
+.newnote-title{
+  border: none;
+}
+
+
+.newnote-content{
+  height: 200px;
+}
+
+
+.newnote-submit{
+  border: none;
+  background-color: #fff;
+  margin-bottom: 0;
+}
+
+
+/* sign up, sign in */
+.sign-container{
   background-color: $color_mono_6;
   height: 100vh;
 }
 
 
-.brand-field{
-  background-color: $color_mono_5;
-  text-align: center;
-  padding: $m6;
-  margin: $m3 $m3 0 $m3;
-  border-radius: 8px 8px 0 0 / 8px 8px 0 0;
-}
-
-
-.signup-logo{
-  height: 60px; 
-}
-
-
-.signup-field{
+.sign-field{
+  border-radius: 8px;
+  padding: $m2;
+  margin: $m2 $m3;
   background-color: #fff;
-  padding: $m5;
-  margin: 0 $m3;
+  text-align: center;
 }
 
 
@@ -68,51 +322,34 @@ body{
 }
 
 
-.error{
-  color: $color_error;
-  margin-bottom: 0;
-  position: absolute;
-  top: 0;
-  z-index: 2;
-}
-
-
 .form-input{
   margin-top: $m3;
   width: 100%;
   padding: 6px;
-  border: 1px solid $color_mono_2;
+  border: 1px solid $color_mono_5;
   border-radius: 4px;
   background-color: #fff; 
 }
 
 
-textarea, select {
-    font-family: $font;
-    padding: 4px;
-    margin: 8px 10px;
-    display: inline-block;
-    border: 1px solid $color_mono;
-    width: 100%;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-
-.submit-field{
-  background-color: $color_brand;
-  padding: $m4;
-  margin: 0 $m3 $m3 $m3;
-  border-radius: 0 0 8px 8px / 0 0 8px 8px;
-}
-.signup-submit{
-  background-color: $color_brand;
-  font-family: $font;
-  color: $color_mono_3;
+.sign-action{
   border: none;
+  margin-bottom: 0;
+  background-color: #fff;
 }
 
 
-.signup-submit:hover {
-  color: $color_mono_2;
+.error{
+  color: $color_error;
+  margin-bottom: 0;
+  position: absolute;
+  top: 0;
 }
+
+
+/* message page */
+.message{
+  margin-top: $m4;
+  text-align: center;
+}
+

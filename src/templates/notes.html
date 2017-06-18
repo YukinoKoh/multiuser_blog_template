@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid notes-field">
+  <div class="row notes-row">
+  {% for note in notes %}
+    <div class="col-sm-4 no-gutters">
+      <a href="/note/{{note.key().id()}}">
+        <div class="notes">
+          <pre class="notes-title">{{note.title | safe}}</pre>
+          <hr class="notes-border">
+          <div class="notes-content">{{note.content[:20] | safe }}
+          {% if note.content|length > 19 %}
+          ...
+          {% endif %}</div>
+          <div class="notes-name">{{note.name}}</div>
+        </div>
+      </a>
+    </div>
+    {% if loop.last %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% endblock %}
+
