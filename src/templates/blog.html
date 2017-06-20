@@ -1,0 +1,100 @@
+{% if name %}
+  {% extends "base.html" %}
+{% else %}
+  {% extends "base_intro.html" %}
+{% endif %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+
+      <div class="blog-title">{{blog.title}}</div>
+      <hr class="blog-border">
+
+      <div class="blog-info">
+        {{ blog.name }} | {{ blog.created }}
+        {% if name == blog.name %}
+          | <a href="/u-{{ name }}/{{ blog.key().id() }}">Edit</a> 
+          | <a href="/delete/{{ blog.key().id() }}">Delete</a> 
+        {% endif %}
+      </div>
+
+      <div class="blog-like">
+      {% if name %}
+        {% if name == blog.name %}
+          <div class="like">
+            <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
+              <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
+            <a href="/">
+        {% else %}
+          <div class="{{ blog.get_like_style(name) }}">
+            <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/0/0">
+              <span class="glyphicon glyphicon-heart{{ blog.get_like_icon(name) }}"></span>
+        {% endif %}
+      {% else %}
+         <div class="like">
+           <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
+             <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
+           <a href="/">
+      {% endif %}
+            {{ blog.count_like() }}
+          </a>
+        </div>
+      </div>
+     </div>
+   </div>
+
+   <div class="row">
+     <div class="col-sm-8 col-sm-offset-2">
+        <!-- any white space witll stay as space -->
+      <p class="blog-content">{{ content | safe }}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2 mt-3">
+      <p class="blog-info">Comment(s)</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <hr class="blog-border">
+    </div>
+  </div>
+  {% for comment in comments %}
+  <div class="row ptb-2 plr-1">
+    <div class="col-sm-8 col-sm-offset-2">
+    {% if comment.key().id() == comment_id %}
+      <form method="post" class="post-form">
+        <textarea name="edit_comment" class="form-input blog-comment">{{ comment.comment }}</textarea>
+        <br>
+        <input type="submit" class="blog-comment-submit" value="Update comment">
+      </form>
+    {% else %}
+      {{ comment.comment }}
+      <br><span class="blog-info">{{ comment.name}} | {{comment.created }}
+        {% if name == comment.name %}
+          | <a href="/blog/{{ blog.key().id() }}/{{comment.key().id() }}">Edit</a>
+          | <a href="/commentdelete/{{ blog.key().id() }}/{{comment.key().id() }}">Delete</a>
+        {% endif %}
+      </span>
+    {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+    <form method="post" class="post-form">
+      <textarea name="comment" class="form-input blog-comment" placeholder='How do you think?'></textarea>
+      <br>
+      <input type="submit" class="blog-comment-submit" value="Comment">
+    </form>
+  </div></div>
+
+</div>
+
+{% endblock %}
+

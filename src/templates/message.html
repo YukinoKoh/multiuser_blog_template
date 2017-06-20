@@ -1,9 +1,14 @@
-{% extends "base.html" %}
+{% if name %}
+  {% extends "base.html" %}
+{% else %}
+  {% extends "base_intro.html" %}
+{% endif %}
+
 
 {% block content %}
 
 <div class="container-fluid">
-  <div class="row note-i-row">
+  <div class="row blog--row">
     <div class="col-sm-8 col-sm-offset-2">
         {{message}}
     </div>

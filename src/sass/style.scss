@@ -2,6 +2,7 @@ $font: 'Open Sans Condensed', sans-serif;
 $font_body_sp: 0.5px;
 $font_title_weight: bold;
 $font_title_case: capitalize;
+$font_size_1: 28px;
 $font_size_2: 23px;
 $font_size_3: 18px;
 $font_size_4: 16px;
@@ -9,7 +10,9 @@ $font_size_5: 14px;
 $font_size_6: 10px;
 $font-size: $font_size_4;
 
-$color_brand_1: #80b7d1;
+
+$color_brand_2: #80b7d1;
+$color_brand_1: #c5a585;
 
 $color_mono: #020202;
 $color_mono_1: #061f26;
@@ -60,6 +63,22 @@ a:hover{
   margin-top: $m3;
 }
 
+.ptb-2{
+  padding-top: $m2;
+  padding-bottom: $m2;
+}
+
+
+.plr-1{
+  padding-left: $m1; 
+  padding-right: $m1; 
+}
+
+
+.justify-content-center{
+  margin: 0 auto;
+}
+
 
 .no-gutters {
   margin-right: 0;
@@ -70,9 +89,10 @@ a:hover{
 
 .action-link{
   color: $color_brand_1;
+  font-weight: lighter;
 }
 
-.action-link a, .action-link a:focus, .action-link a:link, .action-link a:visited{
+.action-link a, .action-link a:hover, .action-link a:focus, .action-link a:link, .action-link a:visited{
   color: $color_brand_1;
 }
 
@@ -86,8 +106,40 @@ a:hover{
 .liked{
   color: $color_like;
 }
-.liked{
+.liked a{
   color: $color_like;
+}
+
+
+.glyphicon{
+  visibility: visible;
+}
+
+
+.tooltips{
+    position: relative;
+    display: inline-block;
+}
+
+
+.tooltips .tooltipstext{
+  font-size: $font_size_5;
+  font-weight: lighter;
+  visibility: hidden;
+  color: $color_mono_2;
+  width: 120px;
+  background-color: $color_mono_6;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 2;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltips:hover .tooltipstext{
+  visibility: visible;
 }
 
 
@@ -144,29 +196,34 @@ a:hover{
 }
 
 
+.top-sign{
+ font-size: $font_size_5;
+}
+
+
 .top-button{
   border:none;
   background-color: $color_mono_7;
 }
 
 
-/* individual note page */
-.note-row{
+/* individual blog page */
+.blog-row{
   margin: $m4 $m3;
 }
  
 
-.newnote-title, .note-title{
+.newblog-title, .blog-title{
   width: 100%;
   font-weight: bold;
-  font-size: $font_size_2;
+  font-size: $font_size_1;
   color: $color_mono;
   margin-top: $m3;
   padding: 0 $m1;
 }
 
 
-.note-border{
+.blog-border{
   margin: 0;
   padding: 0;
   border: 0;
@@ -174,56 +231,79 @@ a:hover{
 }
 
 
-.note-info{
+.blog-info{
   font-size: $font_size_5;
   letter-spacing: $font_body_sp; 
   color: $color_mono_4;
   padding: $m1;
+  margin: 0;
   float: left;
 }
 
-.note-info a{
+.blog-info a{
   color: $color_brand_1;
 }
 
 
-.note-like{
+.blog-like{
   padding: $m1;
   float: right;
-  color: $color_like;
-}
-.note-like a{
-  color: $color_like;
+  visibility: visible;
 }
 
 
-.note-content{
+.blog-content{
   letter-spacing: $font_body_sp;
-  color: $color_mono_3;
+  color: $color_mono;
+  font-size: $font_size_3;
   padding: 0 $m1;
+  margin-top: $m1;
 }
 
 
+.blog-comment-prompt{
+  color: $color_mono_4;
+  font--size: $font_size_5;
+  margin-bottom: 0;
+  margin-top: $m6;
+  padding: 0 $m1;
+  border-bottom: solid 1px $color_mono_5;
+  width: 100%;
+}
 
-/* notes main page */
-.notes-field{
+
+.blog-comment{
+  height: 48px;
+  margin: 0;
+}
+
+
+.blog-comment-submit{
+  float: right;
+  border: none;
+  background-color: #fff;
+  color: $color_mono_4;
+}
+
+/* blogs main page */
+.blogs-field{
   background-color: $color_mono_8;
   height: 100vh;
 }
 
 
-.notes-row{
+.blogs-row{
   margin: $m1 0;
 }
 
 @media screen and (min-width: 900px) {
-  .notes-row{
+  .blogs-row{
     margin: $m1 $m3;
   }
 }
 
 
-.notes{
+.blogs{
   position: relative;
   height: 200px;
   margin: $m1;
@@ -235,7 +315,7 @@ a:hover{
 }
 
 
-.notes-title{
+.blogs-title{
   font-family: $font;
   font-weight: bold;
   font-size: $font_size_2;
@@ -247,7 +327,7 @@ a:hover{
 }
 
 
-.notes-border{
+.blogs-border{
   margin: 0;
   padding: 0;
   border: 0;
@@ -255,7 +335,7 @@ a:hover{
 }
 
 
-.notes-content{
+.blogs-content{
   color: $color_mono_3;
   letter-spacing: $font_body_sp;
   padding: $m2 $m1;
@@ -263,7 +343,7 @@ a:hover{
 }
 
 
-.notes-name{
+.blogs-name{
   font-size: $font_size_5;
   color: $color_mono_4;
   letter-spacing: $font_body_sp; 
@@ -273,57 +353,54 @@ a:hover{
 }
 
 
-.notes-like{
+.blogs-like{
   padding: $m1;
   position: absolute;
   bottom: $m1;
   padding: $m1;
   right: $m1;
-  color: $color_like;
-}
-.notes-like a{
-  color: $color_like;
 }
 
+
 @media screen and (max-width: 768px) {
-  .notes-field{
+  .blogs-field{
     padding: 0;
     background-color: #fff;
   }
-  .notes{
+  .blogs{
     height: 100px;
     margin: 0;
     border-radius: 0;
     border-bottom: $color_mono_6 1px solid;
   }  
-  .notes-title{
+  .blogs-title{
     margin-top: $m1;
     font-size: $font_size_3;
   }
-  .notes-border{
+  .blogs-border{
     border-top: none; 
   }
-  .notes-content{
+  .blogs-content{
     visibility: hidden;
   }
-  .notes-name{
+  .blogs-name{
     bottom: $m2;
   }
 }
 
 
-/* newnote page */
-.newnote-title{
+/* newblog page */
+.newblog-title{
   border: none;
 }
 
 
-.newnote-content{
+.newblog-content{
   height: 200px;
 }
 
 
-.newnote-submit{
+.newblog-submit{
   border: none;
   background-color: #fff;
   margin-bottom: 0;

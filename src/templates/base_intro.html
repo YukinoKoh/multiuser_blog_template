@@ -18,11 +18,20 @@
 <div class="container-fluid top-header"><div class="row top">
   <div class="col-sm-12 top-title">
     <a href="/">
-      <img src="/img/0_logo.svg" alt={{sitename}} class="top-logo">
+      <img src="/img/0_logo.svg" alt="{{sitename}}" class="top-logo">
       {{sitename}}
     </a>
+    <div class="top-status action-link top-sign">
+    {% if blog %}
+      <a href="/signin/1/{{ blog.key().id() }}">
+    {% else %}
+      <a href="/signin">
+    {% endif %}
+      Sign in</a> | <a href="/signup">Sign up</a>
+    </div>
   </div>
 </div></div>
+
 
     {% block content %}
     {% endblock %}

@@ -11,7 +11,7 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
-sitename = 'Coffee Notes'
+sitename = 'Multiuser blog'
 SECRET = 'imsupersecret'
 RANGE = 5
 
@@ -39,6 +39,25 @@ def make_salt():
     return ''.join(random.choice(string.letters) for x in range(RANGE))
 
 
+def url_from_num(num, blog_id=''):
+    num = int(num)
+    url = ''
+    if num == 0:
+        url = '/'
+    if num == 1:
+        url = '/blog/'+blog_id
+    if num == 2:
+        url = '/newblog'
+    return url
+
+
+def message_from_num(blog_id):
+    num = int(blog_id)
+    message = ''
+    if num == 1:
+        message = 'You can create a post after sign in or sign up'
+    return message
+
 # Database
 # User db
 def user_key(name='default'):
@@ -57,23 +76,27 @@ class User(db.Model):
         return u
 
 
-# Note db
-def note_key(name='default'):
+
+# Blog db
+def blog_key(name='default'):
     return db.Key.from_path('posts', name)
 
-
-class Note(db.Model):
+class Blog(db.Model):
     name = db.StringProperty(required=True)
     title = db.TextProperty(required=True)
     content = db.TextProperty(required=True)
     like = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
-
-    # return note entity of given id
+    # return blog entity of given id
     @classmethod
     def by_id(cls, uid):
-        return Note.get_by_id(uid, parent=note_key())
+        return Blog.get_by_id(uid, parent=blog_key())
+
+    @classmethod
+    def by_name(cls, name):
+        b = Blog.all().filter('name =', name).get()
+        return b
 
     def check_like(cls, name):
         like_list = str(cls.like).split(',')
@@ -87,7 +110,7 @@ class Note(db.Model):
         else:
             return ''
 
-    def get_style(cls, name):
+    def get_like_style(cls, name):
         style = ''
         if cls.check_like(name):
             style = 'liked'
@@ -95,15 +118,48 @@ class Note(db.Model):
             style = 'like'
         return style
 
-    def get_icon(cls, name):
+    def get_like_or_unlike(cls, name):
+        url = ''
+        if cls.check_like(name):
+            url = 'unlike'
+        else:
+            url = 'like'
+        return url
+
+    def get_like_icon(cls, name):
         icon = ''
         if not cls.check_like(name):
             icon = '-empty'
         return icon
 
+    def get_like_warning(cls, name):
+        warning = ''
+        if name:
+            warning = 'You can\'t like your own post'
+        else:
+            warning = 'Sign in to like a post'
+        return warning
+
+
+# Comment db
+def comment_key(name='default'):
+    return db.Key.from_path('comment', name)
+
+
+class Comment(db.Model):
+    blog_id = db.StringProperty(required=True)
+    name = db.TextProperty(required=True)
+    comment = db.TextProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+    @classmethod
+    def by_id(cls, uid):
+        return Comment.get_by_id(uid, parent=comment_key())
+
+
 # Site front
 # base handler
-class NotesHandler(webapp2.RequestHandler):
+class BlogsHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -145,15 +201,15 @@ class NotesHandler(webapp2.RequestHandler):
         salt = user.pw_hash.split(',')[0]
         return pw_hash == hashlib.sha256(user.name+pw+salt).hexdigest()
 
-    # render a front page to add/edit note
+    # render a front page to add/edit blog
     def render_front(self, name="", title="", content="",
-                     error="", note_id=""):
-        self.render("newnote.html", name=name, sitename=sitename, title=title,
-                    content=content, error=error, note_id=note_id)
+                     error="", blog_id=""):
+        self.render("newblog.html", name=name, sitename=sitename, title=title,
+                    content=content, error=error, blog_id=blog_id)
 
 
 # page to sign up
-class Signup(NotesHandler):
+class Signup(BlogsHandler):
     def get(self):
         name = self.get_cookie()
         if name:
@@ -213,160 +269,205 @@ class Signup(NotesHandler):
 
 
 # page to sign in
-class Signin(NotesHandler):
-    def get(self):
+class Signin(BlogsHandler):
+    def get(self, page='0', blog_id=''):
         name = self.get_cookie()
         if name:
             self.redirect('/')
         else:
-            self.render("signin.html", sitename=sitename)
+            message = message_from_num(blog_id)
+            self.render("signin.html", sitename=sitename, message=message)
 
-    def post(self):
+    def post(self, page_num, blog_id):
         name = self.request.get("name")
         pw = self.request.get("pw")
         if name and pw:
             user = User.by_name(name)
             if user and self.valid_pw(user, pw):
                 self.set_cookie(name)
-                self.redirect('/')
+                url = url_from_num(page_num, blog_id)
+                self.redirect(url)
         error = 'Username or password seems wrong.'
         params = dict(sitename=sitename, error=error, name=name, pw=pw)
         self.render('signin.html', **params)
 
 
 # sign out
-class Signout(NotesHandler):
+class Signout(BlogsHandler):
     def get(self):
         self.response.delete_cookie('user_id')
-        self.redirect('/signin')
+        self.redirect('/signin/0/0')
 
 
-# page to layout all notes
-class MainPage(NotesHandler):
+# page to layout all blogs
+class MainPage(BlogsHandler):
     def get(self):
-        name = self.get_or_signout_cookie()
-        self.note_or_create()
-        notes = Note.all().order('-created')
-        self.render("notes.html", name=name, sitename=sitename, notes=notes)
+        name = ''
+        name = self.get_cookie()
+        self.delete_or_create_init()
+        blogs = Blog.all().order('-created')
+        self.render("main.html", name=name, sitename=sitename, blogs=blogs)
 
     # check note and if note create one as instruction
-    def note_or_create(self):
-        if Note.all().count() == 0:
+    def delete_or_create_init(self):
+        if Blog.all().count() == 0:
             name = 'Instruction'
-            title = 'First coffee note'
-            content = 'Next holiday plan will be ...'
+            title = 'First blog'
+            content = 'In my mind ...'
             like = 'Instruction'
-            note = Note(parent=note_key(), name=name, title=title,
+            blog = Blog(parent=blog_key(), name=name, title=title,
                         content=content, like=like)
-            note.put()
-        else:
-            pass
+            blog.put()
+        elif Blog.all().count() > 1:
+            b = Blog.by_name('Instruction') 
+            b.delete()
+
+# page to show an individual blog
+class BlogPage(BlogsHandler):
+    def get(self, blog_id, comment_id='0'):
+        name = self.get_cookie()
+        blog = Blog.by_id(int(blog_id))
+        content = blog.content.replace('\n', '<br>')
+
+        comments = Comment.gql("WHERE blog_id = '%s'" % blog_id)
+
+        comment_id = int(comment_id)
+        self.render("blog.html", name=name, sitename=sitename, blog=blog,
+                    content=content, comments=comments,
+                    comment_id=comment_id)
+
+    def post(self, blog_id, comment_id='0'):
+        name = self.get_cookie()
+        comment = self.request.get("comment")
+        edit_comment = self.request.get("edit_comment")
+
+        if name and comment:
+            comment = Comment(parent=comment_key(), blog_id=blog_id,
+                              name=name, comment=comment)
+            comment.put()
+        if name and edit_comment:
+            c = Comment.by_id(int(comment_id)) 
+            c.comment = edit_comment
+            c.put()
+        self.redirect('/blog/'+str(blog_id))
 
 
-# page to show an individual note
-class NotePage(NotesHandler):
-    def get(self, note_id):
-        name = self.get_or_signout_cookie()
-        note = Note.by_id(int(note_id))
-        content = note.content.replace('\n', '<br>')
-        like = ''
-        self.render("note.html", name=name, sitename=sitename, note=note,
-                    content=content)
-
-
-# page to add a new note
-class NewNote(NotesHandler):
+# page to add a new blog
+class NewBlog(BlogsHandler):
     def get(self):
-        name = self.get_or_signout_cookie()
-        self.render_front(name=name)
+        name = self.get_cookie()
+        if name:
+            self.render_front(name=name)
+        else:
+            self.redirect('/signin/0/1')
 
     def post(self):
         title = self.request.get("title")
         content = self.request.get("content")
         name = self.get_cookie()
-        like = ''
+        like = str(name)
         if title and content:
-            note = Note(parent=note_key(), name=name, title=title,
+            blog = Blog(parent=blog_key(), name=name, title=title,
                         content=content, like=like)
-            note.put()
-            note_id = note.key().id()
-            self.redirect('/note/'+str(note_id))
+            blog.put()
+            blog_id = blog.key().id()
+            self.redirect('/blog/'+str(blog_id))
         else:
             error = "We need both a subject and some content"
             self.render_front(name, title, content, error)
 
 
-# page to edit a note
-class EditNote(NotesHandler):
-    def get(self, name, note_id):
+# page to edit a blog
+class EditBlog(BlogsHandler):
+    def get(self, name, blog_id):
         name = self.get_or_signout_cookie()
-        note = Note.by_id(int(note_id))
-        self.render_front(name=name, title=note.title, content=note.content,
-                          note_id=note_id)
+        blog = Blog.by_id(int(blog_id))
+        self.render_front(name=name, title=blog.title, content=blog.content,
+                          blog_id=blog_id)
 
-    def post(self, name, note_id):
+    def post(self, name, blog_id):
         title = self.request.get("title")
         content = self.request.get("content")
         if title and content:
-            note = Note.by_id(int(note_id))
-            note.title = title
-            note.content = content
-            note.put()
-            self.redirect('/note/'+str(note_id))
+            blog = Blog.by_id(int(blog_id))
+            blog.title = title
+            blog.content = content
+            blog.put()
+            self.redirect('/blog/'+str(blog_id))
         else:
             error = "We need both a subject and some content"
             self.render_front(name, title, content, error)
 
 
-# delete a note
-class DeleteNote(NotesHandler):
-    def get(self, note_id):
+
+# delete a blog
+class DeleteBlog(BlogsHandler):
+    def get(self, blog_id):
         name = self.get_or_signout_cookie()
-        note = Note.by_id(int(note_id))
-        if note:
-            title = note.title
-            note.delete()
-            message = 'Your note \''+title+'\' has been deleted.'
+        blog = Blog.by_id(int(blog_id))
+        if blog:
+            title = blog.title
+            comments = Comment.gql("WHERE blog_id = '%s'" % blog_id)
+            for c in comments:
+                c.delete()
+            blog.delete()
+            message = 'Your blog \''+title+'\' has been deleted.'
         else:
-            message = 'We can\'t find the note.'
+            message = 'We can\'t find the blog.'
         self.render("message.html", name=name, sitename=sitename,
                     message=message)
 
+# like a blog
+class LikeBlog(BlogsHandler):
+    def get(self, blog_id, name, page_num):
+        blog = Blog.by_id(int(blog_id))
+        if not blog.check_like(name):
+            like = str(blog.like)+','+name
+            blog.like = like
+            blog.put()
+        url = url_from_num(page_num, blog_id) 
+        self.redirect(url)
 
-# like a note
-class LikeNote(NotesHandler):
-    def get(self, note_id, name, page_num):
-        note = Note.by_id(int(note_id))
-        if not note.check_like(name):
-            like = str(note.like)+','+name
-            note.like = like
-            note.put()
 
-        if int(page_num) == 0:
-            url = '/note/'+note_id
+# like a blog
+class UnlikeBlog(BlogsHandler):
+    def get(self, blog_id, name, page_num):
+        blog = Blog.by_id(int(blog_id))
+        if blog.check_like(name):
+            like_list = str(blog.like).split(',')
+            name_index = like_list.index(str(name))
+            like_list.pop(name_index)
+            str_like = ','.join(like_list)
+            blog.like = str_like
+            blog.put()
+        url = url_from_num(page_num, blog_id) 
+        self.redirect(url)
+
+
+# delete a comment
+class DeleteComment(BlogsHandler):
+    def get(self, blog_id, comment_id):
+        name = self.get_or_signout_cookie()
+        c = Comment.by_id(int(comment_id))
+        if c:
+            c.delete()
+            message = 'Your blog comment has been deleted.'
         else:
-            url = '/'
-        self.redirect(url) 
-
-
-# page for new uesr to have a glance
-class About(NotesHandler):
-    def get(self):
-        name = self.get_cookie()
-        if name:
-            self.redirect('/')
-        else:
-            self.render('about.html', sitename=sitename)
+            pass
+        self.redirect('/blog/'+str(blog_id))
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signup', Signup),
                                ('/signin', Signin),
+                               ('/signin/([0-9])/([0-9]+)', Signin),
                                ('/signout', Signout),
-                               ('/newnote', NewNote),
-                               ('/delete/([0-9]+)', DeleteNote),
-                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9])', LikeNote),
-                               ('/note/([0-9]+)', NotePage),
-                               ('/u-([a-zA-Z0-9_-]+)/([0-9]+)', EditNote),
-                               ('/about', About)],
+                               ('/newblog', NewBlog),
+                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9])', LikeBlog),
+                               ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9])', UnlikeBlog),
+                               ('/blog/([0-9]+)', BlogPage),
+                               ('/delete/([0-9]+)', DeleteBlog),
+                               ('/u-([a-zA-Z0-9_-]+)/([0-9]+)', EditBlog),
+                               ('/blog/([0-9]+)/([0-9]+)', BlogPage),
+                               ('/commentdelete/([0-9]+)/([0-9]+)', DeleteComment)],
                               debug=True)

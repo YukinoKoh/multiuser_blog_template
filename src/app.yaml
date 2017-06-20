@@ -7,8 +7,10 @@ handlers:
   static_dir: img
 - url: /css
   static_dir: css
+- url: /js
+  static_dir: js
 - url: /.*
-  script: notes.app
+  script: blog.app
 
 libraries:
 - name: jinja2

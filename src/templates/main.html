@@ -1,0 +1,65 @@
+{% if name %}
+  {% extends "base.html" %}
+{% else %}
+  {% extends "base_intro.html" %}
+{% endif %}
+
+{% block content %}
+
+<div class="container-fluid"><div class="blogs-row"><div class="col-sm-12 ptb-2">
+  <p>
+    {% if name %}
+      Welcome, {{name}} | 
+    {% endif %}
+    <span class="action-link"><a href="/newblog">
+      <span class="glyphicon glyphicon-pencil"></span> Create a post
+    </a></span>
+  </p>
+</div></div></div>
+
+<div class="container-fluid blogs-field">
+  <div class="row blogs-row">
+  {% for blog in blogs %}
+    <div class="col-sm-6 no-gutters">
+      <a href="/blog/{{blog.key().id()}}">
+        <div class="blogs">
+          <pre class="blogs-title">{{blog.title | safe}}</pre>
+          <hr class="blogs-border">
+          <div class="blogs-content">{{blog.content[:40] | safe }}
+          {% if blog.content|length > 39 %}
+          ...
+          {% endif %}</div>
+          <div class="blogs-name">{{blog.name}}</div>
+          <div class="blogs-like">
+          {% if name %}
+            {% if name == blog.name %}
+              <div class="like">
+                <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
+                <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
+                <a href="/">
+            {% else %}
+              <div class="{{ blog.get_like_style(name) }}">
+                <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/0/0">
+                  <span class="glyphicon glyphicon-heart{{ blog.get_like_icon(name) }}"></span>
+            {% endif %}
+          {% else %}
+            <div class="like">
+              <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
+                <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
+              <a href="/">
+          {% endif %}
+                {{ blog.count_like() }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% if loop.last %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% endblock %}
+
