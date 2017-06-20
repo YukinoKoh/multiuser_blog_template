@@ -92,7 +92,19 @@ a:hover{
   font-weight: lighter;
 }
 
-.action-link a, .action-link a:hover, .action-link a:focus, .action-link a:link, .action-link a:visited{
+.action-link a{
+  color: $color_brand_1;
+}
+.action-link a:hover{
+  color: $color_brand_1;
+}
+.action-link a:focus{
+  color: $color_brand_1;
+}
+.action-link a:link{
+  color: $color_brand_1;
+}
+.action-link a:visited{
   color: $color_brand_1;
 }
 
@@ -231,6 +243,14 @@ a:hover{
 }
 
 
+.blog-comment-border{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid $color_mono_4;
+}
+
+
 .blog-info{
   font-size: $font_size_5;
   letter-spacing: $font_body_sp; 
@@ -242,6 +262,15 @@ a:hover{
 
 .blog-info a{
   color: $color_brand_1;
+}
+
+
+.blog-comment-info{
+  font-size: $font_size_5;
+  letter-spacing: $font_body_sp; 
+  color: $color_mono_2;
+  padding: 0 $m1;
+  margin: $m5 0 0 0;
 }
 
 

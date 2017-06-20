@@ -9,14 +9,13 @@
       <input type="text" name="title" class="newblog-title" 
                 placeholder='Title' value="{{title}}">
       <hr class="blog-border">
-      <textarea name="content" class="form-input newblog-content" placeholder='Write a note'>{{content}}</textarea>
+      <textarea name="content" class="form-input newblog-content" placeholder='Write a post'>{{content}}</textarea>
       <br>
       {% if blog_id %}
-        <a href="/blog/{{note_id}}" class="action-link">
+        <a href="/blog/{{note_id}}" class="action-link">Cancel</a>
       {% else %}
-        <a href="/" class="action-link">
-      {% endif %}
-      Cancel</a> | <input type="submit" class="newblog-submit action-link" value="Post">
+        <a href="/" class="action-link">Cancel</a>
+      {% endif %} | <input type="submit" class="newblog-submit action-link" value="Post">
     </form>
   </div>
 </div></div>

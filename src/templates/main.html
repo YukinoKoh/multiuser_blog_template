@@ -25,8 +25,8 @@
         <div class="blogs">
           <pre class="blogs-title">{{blog.title | safe}}</pre>
           <hr class="blogs-border">
-          <div class="blogs-content">{{blog.content[:40] | safe }}
-          {% if blog.content|length > 39 %}
+          <div class="blogs-content">{{blog.content[:80] | safe }}
+          {% if blog.content|length > 79 %}
           ...
           {% endif %}</div>
           <div class="blogs-name">{{blog.name}}</div>
@@ -39,14 +39,13 @@
                 <a href="/">
             {% else %}
               <div class="{{ blog.get_like_style(name) }}">
-                <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/0/0">
+                <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/0">
                   <span class="glyphicon glyphicon-heart{{ blog.get_like_icon(name) }}"></span>
             {% endif %}
           {% else %}
             <div class="like">
-              <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
-                <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
-              <a href="/">
+              <a href="/signin/0/2">
+                <span class="glyphicon glyphicon-heart-empty"></span>
           {% endif %}
                 {{ blog.count_like() }}
               </a>

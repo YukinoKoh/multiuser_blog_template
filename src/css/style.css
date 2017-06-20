@@ -35,7 +35,19 @@ a:hover {
   color: #c5a585;
   font-weight: lighter; }
 
-.action-link a, .action-link a:hover, .action-link a:focus, .action-link a:link, .action-link a:visited {
+.action-link a {
+  color: #c5a585; }
+
+.action-link a:hover {
+  color: #c5a585; }
+
+.action-link a:focus {
+  color: #c5a585; }
+
+.action-link a:link {
+  color: #c5a585; }
+
+.action-link a:visited {
   color: #c5a585; }
 
 .like {
@@ -136,6 +148,12 @@ a:hover {
   border: 0;
   border-top: 1px solid #525252; }
 
+.blog-comment-border {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #8a8a8a; }
+
 .blog-info {
   font-size: 14px;
   letter-spacing: 0.5px;
@@ -146,6 +164,13 @@ a:hover {
 
 .blog-info a {
   color: #c5a585; }
+
+.blog-comment-info {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #232323;
+  padding: 0 8px;
+  margin: 40px 0 0 0; }
 
 .blog-like {
   padding: 8px;

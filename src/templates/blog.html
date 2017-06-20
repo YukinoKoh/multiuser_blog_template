@@ -18,7 +18,20 @@
         {{ blog.name }} | {{ blog.created }}
         {% if name == blog.name %}
           | <a href="/u-{{ name }}/{{ blog.key().id() }}">Edit</a> 
-          | <a href="/delete/{{ blog.key().id() }}">Delete</a> 
+          | <span data-toggle="modal" data-target="#deleteModal" class="action-link">Delete</span>
+
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal" role="dialog">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-body">
+                  <p>Are you sure you want to delete your post?</p>
+                    <span data-dismiss="modal" class="f-left">Cancel</span> | <a href="/delete/{{ blog.key().id() }}">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
         {% endif %}
       </div>
 
@@ -31,14 +44,13 @@
             <a href="/">
         {% else %}
           <div class="{{ blog.get_like_style(name) }}">
-            <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/0/0">
+            <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/3">
               <span class="glyphicon glyphicon-heart{{ blog.get_like_icon(name) }}"></span>
         {% endif %}
       {% else %}
-         <div class="like">
-           <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
-             <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
-           <a href="/">
+        <div class="like">
+          <a href="/signin/{{ blog.key().id() }}/2">
+            <span class="glyphicon glyphicon-heart-empty"></span>
       {% endif %}
             {{ blog.count_like() }}
           </a>
@@ -56,12 +68,12 @@
 
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2 mt-3">
-      <p class="blog-info">Comment(s)</p>
+      <p class="blog-comment-info">Comment</p>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-      <hr class="blog-border">
+      <hr class="blog-comment-border">
     </div>
   </div>
   {% for comment in comments %}

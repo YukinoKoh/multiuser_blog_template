@@ -39,15 +39,15 @@ def make_salt():
     return ''.join(random.choice(string.letters) for x in range(RANGE))
 
 
-def url_from_num(num, blog_id=''):
-    num = int(num)
+def url_from_num(blog_id):
+    num = int(blog_id)
     url = ''
     if num == 0:
         url = '/'
-    if num == 1:
-        url = '/blog/'+blog_id
-    if num == 2:
+    elif num == 1:
         url = '/newblog'
+    else:
+        url = '/blog/'+blog_id
     return url
 
 
@@ -55,7 +55,9 @@ def message_from_num(blog_id):
     num = int(blog_id)
     message = ''
     if num == 1:
-        message = 'You can create a post after sign in or sign up'
+        message = 'Sign in or sign up tp create a post'
+    if num ==2:
+        message = 'Sign in or sign up to like posts'
     return message
 
 # Database
@@ -270,22 +272,23 @@ class Signup(BlogsHandler):
 
 # page to sign in
 class Signin(BlogsHandler):
-    def get(self, page='0', blog_id=''):
+    def get(self, blog_id='', message_num=''):
         name = self.get_cookie()
+        message = ''
         if name:
             self.redirect('/')
-        else:
-            message = message_from_num(blog_id)
-            self.render("signin.html", sitename=sitename, message=message)
+        if message_num:
+            message = message_from_num(message_num)
+        self.render("signin.html", sitename=sitename, message=message)
 
-    def post(self, page_num, blog_id):
+    def post(self, blog_id='', message_num=''):
         name = self.request.get("name")
         pw = self.request.get("pw")
         if name and pw:
             user = User.by_name(name)
             if user and self.valid_pw(user, pw):
                 self.set_cookie(name)
-                url = url_from_num(page_num, blog_id)
+                url = url_from_num(blog_id)
                 self.redirect(url)
         error = 'Username or password seems wrong.'
         params = dict(sitename=sitename, error=error, name=name, pw=pw)
@@ -319,8 +322,9 @@ class MainPage(BlogsHandler):
                         content=content, like=like)
             blog.put()
         elif Blog.all().count() > 1:
-            b = Blog.by_name('Instruction') 
-            b.delete()
+            if Blog.by_name('Instruction'):
+                b = Blog.by_name('Instruction')
+                b.delete()
 
 # page to show an individual blog
 class BlogPage(BlogsHandler):
@@ -329,7 +333,7 @@ class BlogPage(BlogsHandler):
         blog = Blog.by_id(int(blog_id))
         content = blog.content.replace('\n', '<br>')
 
-        comments = Comment.gql("WHERE blog_id = '%s'" % blog_id)
+        comments = Comment.gql("WHERE blog_id = '%s' ORDER BY created DESC" % blog_id)
 
         comment_id = int(comment_id)
         self.render("blog.html", name=name, sitename=sitename, blog=blog,
@@ -359,7 +363,7 @@ class NewBlog(BlogsHandler):
         if name:
             self.render_front(name=name)
         else:
-            self.redirect('/signin/0/1')
+            self.redirect('/signin/1/1')
 
     def post(self):
         title = self.request.get("title")
@@ -373,7 +377,7 @@ class NewBlog(BlogsHandler):
             blog_id = blog.key().id()
             self.redirect('/blog/'+str(blog_id))
         else:
-            error = "We need both a subject and some content"
+            error = "Write both a subject and some content to create a post"
             self.render_front(name, title, content, error)
 
 
@@ -419,19 +423,22 @@ class DeleteBlog(BlogsHandler):
 
 # like a blog
 class LikeBlog(BlogsHandler):
-    def get(self, blog_id, name, page_num):
+    def get(self, blog_id, name, page):
         blog = Blog.by_id(int(blog_id))
         if not blog.check_like(name):
             like = str(blog.like)+','+name
             blog.like = like
             blog.put()
-        url = url_from_num(page_num, blog_id) 
+        if page == '0':
+            url = '/'
+        else:
+            url = url_from_num(blog_id) 
         self.redirect(url)
 
 
 # like a blog
 class UnlikeBlog(BlogsHandler):
-    def get(self, blog_id, name, page_num):
+    def get(self, blog_id, name, page):
         blog = Blog.by_id(int(blog_id))
         if blog.check_like(name):
             like_list = str(blog.like).split(',')
@@ -440,7 +447,10 @@ class UnlikeBlog(BlogsHandler):
             str_like = ','.join(like_list)
             blog.like = str_like
             blog.put()
-        url = url_from_num(page_num, blog_id) 
+        if page == '0':
+            url = '/'
+        else:
+            url = url_from_num(blog_id) 
         self.redirect(url)
 
 
@@ -454,17 +464,19 @@ class DeleteComment(BlogsHandler):
             message = 'Your blog comment has been deleted.'
         else:
             pass
-        self.redirect('/blog/'+str(blog_id))
+        url_from_num(blog_id)
+        self.redirect(url)
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signup', Signup),
                                ('/signin', Signin),
-                               ('/signin/([0-9])/([0-9]+)', Signin),
+                               ('/signin/([0-9]+)', Signin),
+                               ('/signin/([0-9]+)/([0-9])', Signin),
                                ('/signout', Signout),
                                ('/newblog', NewBlog),
-                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9])', LikeBlog),
-                               ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9])', UnlikeBlog),
+                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)', LikeBlog),
+                               ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)', UnlikeBlog),
                                ('/blog/([0-9]+)', BlogPage),
                                ('/delete/([0-9]+)', DeleteBlog),
                                ('/u-([a-zA-Z0-9_-]+)/([0-9]+)', EditBlog),
