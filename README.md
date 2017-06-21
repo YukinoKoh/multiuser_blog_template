@@ -11,7 +11,7 @@ This app includes..
 - Add/Edit/Delete comments function
 - Like/Unlike posts function
 
-![blog sample image](img/blog_screen.jpg)
+![blog sample image](img/sample_screen.jpg)
 
 
 ## File structure
