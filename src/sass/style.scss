@@ -9,7 +9,7 @@ $font_size_6: 10px;
 $font-size: $font_size_4;
 
 $color_brand_2: #80b7d1;
-$color_brand_1: #c5a585;
+$color_brand_1: #7728cf;
 
 $color_mono: #020202;
 $color_mono_1: #061f26;
@@ -17,9 +17,9 @@ $color_mono_2: #232323;
 $color_mono_3: #525252;
 $color_mono_4: #8a8a8a;
 $color_mono_5: #dcdddf;
-$color_mono_6: #f0f0f0;
-$color_mono_7: #f7f7f7;
-$color_mono_8: #fafafa;
+$color_mono_6: #e3e3e3;
+$color_mono_7: #f0f1f3;
+$color_mono_8: #f6f7f7;
 
 $color_error: #f3bca9;
 $color_like: #f7d1e6;
@@ -336,12 +336,10 @@ a:hover{
 
 .blogs{
   position: relative;
-  height: 200px;
   margin: $m1;
-  padding: $m1;
+  padding: $m1 $m1 $m4 $m1;
   background-color: #fff;
   border-radius: 6px;
-  border-right: $color_mono_6 1px solid;
   border-bottom: $color_mono_5 2px solid;
 }
 
@@ -362,7 +360,7 @@ a:hover{
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid $color_mono_5;
+  border-top: 1px solid $color_mono_6;
 }
 
 

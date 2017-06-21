@@ -15,11 +15,12 @@
 <div class="container-fluid blogs-field">
   <div class="row blogs-row">
   {% for blog in blogs %}
-    <div class="col-md-12 no-gutters">
+    <div class="col-md-12">
       <a href="/blog/{{blog.key().id()}}">
         <div class="blogs">
           <pre class="blogs-title">{{blog.title | safe}}</pre>
           <hr class="blogs-border">
+          <div class="blogs-content">{{blog.content | safe}}</div>
           <div class="blogs-name"><a href="/~{{ blog.name }}" class="action-link">{{blog.name}}</a></div>
           <div class="blogs-like">
           {% if name %}

@@ -87,7 +87,7 @@
       </form>
     {% else %}
       {{ comment.comment }}
-      <br><span class="blog-info">{{ comment.name}} | {{comment.created }}
+      <br><span class="blog-info"><a href="/~{{ comment.name }}" class="action-link">{{ comment.name}}</a> | {{comment.created }}
         {% if name == comment.name %}
           | <a href="/blog/{{ blog.key().id() }}/{{comment.key().id() }}">Edit</a>
           | <a href="/commentdelete/{{ blog.key().id() }}/{{comment.key().id() }}">Delete</a>

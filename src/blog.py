@@ -478,10 +478,7 @@ class DeleteComment(BlogsHandler):
         c = Comment.by_id(int(comment_id))
         if c:
             c.delete()
-            message = 'Your blog comment has been deleted.'
-        else:
-            pass
-        url_from_num(blog_id)
+        url = url_from_num(blog_id)
         self.redirect(url)
 
 

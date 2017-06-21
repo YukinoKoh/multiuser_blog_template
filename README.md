@@ -1,20 +1,23 @@
-![notes sample image](img/sample_device.jpg)
+![blog sample image](img/sample_device.jpg)
 
-It's a  *note sharing* web app template, using [Google App Engine with Python](https://cloud.google.com/python/) and a Python template engine, [Jinja2](http://jinja.pocoo.org/).
+It's a  *blog* web app template, using [Google App Engine with Python](https://cloud.google.com/python/) and a Python template engine, [Jinja2](http://jinja.pocoo.org/).
 
 This app includes..
-- Default pages to show all or individual notes
-- About page as app introduction
+- Main pages to layout all posts
+- Page to layout individual users' all posts
+- Page to show a post
 - Sign up/sign in function
-- Add/Edit/Delete notes function
+- Add/Edit/Delete posts function
+- Add/Edit/Delete comments function
+- Like/Unlike posts function
 
-![notes sample image](img/sample_screen.jpg)
+![blog sample image](img/blog_screen.jpg)
 
 
 ## File structure
 - `src`: Resource folder
   - `app.yaml`: yaml file for Google App Engine
-  - `notes.py`: Python to generate blog platform, including sisn up, login, post, handling database.
+  - `blog.py`: Python to generate blog platform
   - `css`: This folder inludes css file(s) for the generated site pages.
   - `sass`: This folder includes sass file(s) to write css files.
   - `img`: This folder includes image files for the generated site pages. 
@@ -83,7 +86,7 @@ sitename = 'Your blog name'
 
 
 ### Database
-This app as a default has 2 entity kinds: Note and User
+This app as a default has 3 entity kinds: User, Blog, and Comment
 
 ```
 class User(db.Model):
@@ -92,12 +95,20 @@ class User(db.Model):
     email = db.StringProperty()
 ```
 ```
-class Note(db.Model):
+class Blog(db.Model):
     name = db.StringProperty(required=True)
     title = db.TextProperty(required=True)
     content = db.TextProperty(required=True)
+    like = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
+```
+```
+class Comment(db.Model):
+    blog_id = db.StringProperty(required=True)
+    name = db.TextProperty(required=True)
+    comment = db.TextProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
 ```
 db.Model is inherited from [Model Class](https://cloud.google.com/appengine/docs/standard/python/datastore/modelclass).
 
