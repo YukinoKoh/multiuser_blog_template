@@ -10,12 +10,11 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-
-      <div class="blog-title">{{blog.title}}</div>
+      <div class="blog-title">{{ blog.title }}</div>
       <hr class="blog-border">
-
       <div class="blog-info">
         <a href="/~{{ blog.name }}" class="action-link">{{ blog.name }}</a> | {{ blog.created }}
+
         {% if name == blog.name %}
           | <a href="/~{{ name }}/{{ blog.key().id() }}">Edit</a> 
           | <span data-toggle="modal" data-target="#deleteModal" class="action-link">Delete</span>
@@ -33,8 +32,8 @@
             </div>
           </div>
         {% endif %}
-      </div>
 
+      </div>
       <div class="blog-like">
       {% if name %}
         {% if name == blog.name %}
@@ -87,10 +86,10 @@
       </form>
     {% else %}
       {{ comment.comment }}
-      <br><span class="blog-info"><a href="/~{{ comment.name }}" class="action-link">{{ comment.name}}</a> | {{comment.created }}
+      <br><span class="blog-info"><a href="/~{{ comment.name }}" class="action-link">{{ comment.name }}</a> | {{ comment.created }}
         {% if name == comment.name %}
-          | <a href="/blog/{{ blog.key().id() }}/{{comment.key().id() }}">Edit</a>
-          | <a href="/commentdelete/{{ blog.key().id() }}/{{comment.key().id() }}">Delete</a>
+          | <a href="/blog/{{ blog.key().id() }}/{{ comment.key().id() }}">Edit</a>
+          | <a href="/commentdelete/{{ blog.key().id() }}/{{ comment.key().id() }}">Delete</a>
         {% endif %}
       </span>
     {% endif %}
@@ -99,12 +98,13 @@
   {% endfor %}
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-    <form method="post" class="post-form">
-      <textarea name="comment" class="form-input blog-comment" placeholder='How do you think?'></textarea>
-      <br>
-      <input type="submit" class="blog-comment-submit" value="Comment">
-    </form>
-  </div></div>
+      <form method="post" class="post-form">
+        <textarea name="comment" class="form-input blog-comment" placeholder='How do you think?'></textarea>
+        <br>
+        <input type="submit" class="blog-comment-submit" value="Comment">
+      </form>
+    </div>
+  </div>
 
 </div>
 

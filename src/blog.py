@@ -8,9 +8,12 @@ import hashlib
 import hmac
 from google.appengine.ext import db
 
+# handling templates with jinja
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
+
+# EDIT THIS AREA
 sitename = 'Multiuser blog'
 SECRET = 'imsupersecret'
 RANGE = 5
@@ -22,7 +25,7 @@ def hash_str(s):
     return hmac.new(SECRET, s).hexdigest()
 
 
-# return given string (user id) | HASH
+# return given string (user id) | hased id
 def make_secure_cookie(s):
     return "%s|%s" % (s, str(hash_str(s)))
 
@@ -62,6 +65,7 @@ def message_from_num(blog_id):
         message = 'Sign in or sign up to comment on posts'
     return message
 
+
 # Database
 # User db
 def user_key(name='default'):
@@ -80,10 +84,10 @@ class User(db.Model):
         return u
 
 
-
 # Blog db
 def blog_key(name='default'):
     return db.Key.from_path('posts', name)
+
 
 class Blog(db.Model):
     name = db.StringProperty(required=True)
@@ -92,6 +96,7 @@ class Blog(db.Model):
     like = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
+
     # return blog entity of given id
     @classmethod
     def by_id(cls, uid):
@@ -140,8 +145,6 @@ class Blog(db.Model):
         warning = ''
         if name:
             warning = 'You can\'t like your own post'
-        else:
-            warning = 'Sign in to like a post'
         return warning
 
 
@@ -205,7 +208,7 @@ class BlogsHandler(webapp2.RequestHandler):
         salt = user.pw_hash.split(',')[0]
         return pw_hash == hashlib.sha256(user.name+pw+salt).hexdigest()
 
-    # render a front page to add/edit blog
+    # render a front page to add/edit a blog
     def render_front(self, name="", title="", content="",
                      error="", blog_id=""):
         self.render("newblog.html", name=name, sitename=sitename, title=title,
@@ -225,7 +228,7 @@ class Signup(BlogsHandler):
     def valid(self, pattern_re, text):
         return re.match(pattern_re, text)
 
-    # register user to User db
+    # register a user to User db
     def make_entity_user(self, name, pw, email):
         pw_hash = self.make_pw_hash(name, pw)
         user = User(name=name, pw_hash=pw_hash, email=email)
@@ -334,7 +337,8 @@ class UserPage(BlogsHandler):
     def get(self, blogger_name):
         name = ''
         name = self.get_cookie()
-        blogs = Blog.gql("WHERE name = '%s' ORDER BY created DESC" % blogger_name)
+        blogs = Blog.gql("WHERE name = '%s' ORDER BY created DESC"
+                         % blogger_name)
         self.render("user.html", name=name, sitename=sitename,
                     blogger_name=blogger_name, blogs=blogs)
 
@@ -344,15 +348,20 @@ class BlogPage(BlogsHandler):
     def get(self, blog_id, comment_id='0'):
         name = self.get_cookie()
         blog = Blog.by_id(int(blog_id))
-        content = blog.content.replace('\n', '<br>')
+        if blog:
+            content = blog.content.replace('\n', '<br>')
+            comments = Comment.gql("WHERE blog_id = '%s' ORDER BY created DESC"
+                                   % blog_id)
+            comment_id = int(comment_id)
+            self.render("blog.html", name=name, sitename=sitename, blog=blog,
+                        content=content, comments=comments,
+                        comment_id=comment_id)
+        else:
+            message = "We can't find the post."
+            self.render("message.html", name=name, sitename=sitename,
+                        message=message)
 
-        comments = Comment.gql("WHERE blog_id = '%s' ORDER BY created DESC" % blog_id)
-
-        comment_id = int(comment_id)
-        self.render("blog.html", name=name, sitename=sitename, blog=blog,
-                    content=content, comments=comments,
-                    comment_id=comment_id)
-
+    # deal with comments on the post
     def post(self, blog_id, comment_id='0'):
         name = self.get_cookie()
         comment = self.request.get("comment")
@@ -364,7 +373,7 @@ class BlogPage(BlogsHandler):
             comment.put()
             self.redirect(url)
         if name and edit_comment:
-            c = Comment.by_id(int(comment_id)) 
+            c = Comment.by_id(int(comment_id))
             c.comment = edit_comment
             c.put()
             self.redirect(url)
@@ -372,7 +381,7 @@ class BlogPage(BlogsHandler):
             self.redirect('/signin/'+str(blog_id)+'/3')
 
 
-# page to add a new blog
+# page to create a new blog
 class NewBlog(BlogsHandler):
     def get(self):
         name = self.get_cookie()
@@ -403,8 +412,14 @@ class EditBlog(BlogsHandler):
     def get(self, name, blog_id):
         name = self.get_or_signout_cookie()
         blog = Blog.by_id(int(blog_id))
-        self.render_front(name=name, title=blog.title, content=blog.content,
-                          blog_id=blog_id)
+        if name == blog.name:
+            self.render_front(name=name, title=blog.title,
+                              content=blog.content, blog_id=blog_id)
+        else:
+            message = "You can edit/delete only your own blog."
+            self.render("message.html", name=name, sitename=sitename,
+                        message=message)
+
 
     def post(self, name, blog_id):
         title = self.request.get("title")
@@ -414,11 +429,10 @@ class EditBlog(BlogsHandler):
             blog.title = title
             blog.content = content
             blog.put()
-            self.redirect('/blog/'+str(blog_id))
+            self.redirect(url_from_num(blog_id))
         else:
             error = "We need both a subject and some content"
             self.render_front(name, title, content, error)
-
 
 
 # delete a blog
@@ -426,17 +440,20 @@ class DeleteBlog(BlogsHandler):
     def get(self, blog_id):
         name = self.get_or_signout_cookie()
         blog = Blog.by_id(int(blog_id))
-        if blog:
+        if name == blog.name and blog:
             title = blog.title
             comments = Comment.gql("WHERE blog_id = '%s'" % blog_id)
             for c in comments:
                 c.delete()
             blog.delete()
             message = 'Your blog \''+title+'\' has been deleted.'
-        else:
+        elif name == blog.name:
             message = 'We can\'t find the blog.'
+        else:
+            message = "You can edit/delete only your own blog."
         self.render("message.html", name=name, sitename=sitename,
                     message=message)
+
 
 # like a blog
 class LikeBlog(BlogsHandler):
@@ -449,7 +466,7 @@ class LikeBlog(BlogsHandler):
         if page == '0':
             url = '/'
         else:
-            url = url_from_num(blog_id) 
+            url = url_from_num(blog_id)
         self.redirect(url)
 
 
@@ -467,7 +484,7 @@ class UnlikeBlog(BlogsHandler):
         if page == '0':
             url = '/'
         else:
-            url = url_from_num(blog_id) 
+            url = url_from_num(blog_id)
         self.redirect(url)
 
 
@@ -489,12 +506,15 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signin/([0-9]+)/([0-9])', Signin),
                                ('/signout', Signout),
                                ('/newblog', NewBlog),
-                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)', LikeBlog),
-                               ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)', UnlikeBlog),
+                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)',
+                                LikeBlog),
+                               ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)',
+                                UnlikeBlog),
                                ('/blog/([0-9]+)', BlogPage),
                                ('/delete/([0-9]+)', DeleteBlog),
                                ('/~([a-zA-Z0-9_-]+)', UserPage),
                                ('/~([a-zA-Z0-9_-]+)/([0-9]+)', EditBlog),
                                ('/blog/([0-9]+)/([0-9]+)', BlogPage),
-                               ('/commentdelete/([0-9]+)/([0-9]+)', DeleteComment)],
+                               ('/commentdelete/([0-9]+)/([0-9]+)',
+                                DeleteComment)],
                               debug=True)
