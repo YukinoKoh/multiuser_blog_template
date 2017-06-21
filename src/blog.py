@@ -56,8 +56,10 @@ def message_from_num(blog_id):
     message = ''
     if num == 1:
         message = 'Sign in or sign up tp create a post'
-    if num ==2:
+    if num == 2:
         message = 'Sign in or sign up to like posts'
+    if num == 3:
+        message = 'Sign in or sign up to comment on posts'
     return message
 
 # Database
@@ -281,7 +283,7 @@ class Signin(BlogsHandler):
             message = message_from_num(message_num)
         self.render("signin.html", sitename=sitename, message=message)
 
-    def post(self, blog_id='', message_num=''):
+    def post(self, blog_id='0', message_num=''):
         name = self.request.get("name")
         pw = self.request.get("pw")
         if name and pw:
@@ -326,6 +328,17 @@ class MainPage(BlogsHandler):
                 b = Blog.by_name('Instruction')
                 b.delete()
 
+
+# page to layout user's blogs
+class UserPage(BlogsHandler):
+    def get(self, blogger_name):
+        name = ''
+        name = self.get_cookie()
+        blogs = Blog.gql("WHERE name = '%s' ORDER BY created DESC" % blogger_name)
+        self.render("user.html", name=name, sitename=sitename,
+                    blogger_name=blogger_name, blogs=blogs)
+
+
 # page to show an individual blog
 class BlogPage(BlogsHandler):
     def get(self, blog_id, comment_id='0'):
@@ -344,16 +357,19 @@ class BlogPage(BlogsHandler):
         name = self.get_cookie()
         comment = self.request.get("comment")
         edit_comment = self.request.get("edit_comment")
-
+        url = url_from_num(blog_id)
         if name and comment:
             comment = Comment(parent=comment_key(), blog_id=blog_id,
                               name=name, comment=comment)
             comment.put()
+            self.redirect(url)
         if name and edit_comment:
             c = Comment.by_id(int(comment_id)) 
             c.comment = edit_comment
             c.put()
-        self.redirect('/blog/'+str(blog_id))
+            self.redirect(url)
+        else:
+            self.redirect('/signin/'+str(blog_id)+'/3')
 
 
 # page to add a new blog
@@ -375,9 +391,10 @@ class NewBlog(BlogsHandler):
                         content=content, like=like)
             blog.put()
             blog_id = blog.key().id()
-            self.redirect('/blog/'+str(blog_id))
+            url = url_from_num(str(blog_id))
+            self.redirect(url)
         else:
-            error = "Write both a subject and some content to create a post"
+            error = "Write both a subject and some content to create a post."
             self.render_front(name, title, content, error)
 
 
@@ -479,7 +496,8 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)', UnlikeBlog),
                                ('/blog/([0-9]+)', BlogPage),
                                ('/delete/([0-9]+)', DeleteBlog),
-                               ('/u-([a-zA-Z0-9_-]+)/([0-9]+)', EditBlog),
+                               ('/~([a-zA-Z0-9_-]+)', UserPage),
+                               ('/~([a-zA-Z0-9_-]+)/([0-9]+)', EditBlog),
                                ('/blog/([0-9]+)/([0-9]+)', BlogPage),
                                ('/commentdelete/([0-9]+)/([0-9]+)', DeleteComment)],
                               debug=True)

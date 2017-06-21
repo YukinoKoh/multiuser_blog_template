@@ -5,7 +5,9 @@
 <div class="container-fluid sign-container"><div class="row">
   <div class="col-sm-6 col-sm-offset-3">
     <div class="sign-field">
-      {{ message }}
+    {% if message %}
+      <div class="sign-message">{{ message }}<hr></div>
+    {% endif %}
       <form method="post">
         <div class="form-field">
           <p class="error">{{ error }}</p>

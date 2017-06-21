@@ -1,7 +1,5 @@
 $font: 'Open Sans Condensed', sans-serif;
-$font_body_sp: 0.5px;
-$font_title_weight: bold;
-$font_title_case: capitalize;
+
 $font_size_1: 28px;
 $font_size_2: 23px;
 $font_size_3: 18px;
@@ -9,7 +7,6 @@ $font_size_4: 16px;
 $font_size_5: 14px;
 $font_size_6: 10px;
 $font-size: $font_size_4;
-
 
 $color_brand_2: #80b7d1;
 $color_brand_1: #c5a585;
@@ -26,6 +23,11 @@ $color_mono_8: #fafafa;
 
 $color_error: #f3bca9;
 $color_like: #f7d1e6;
+
+$font_title_weight: normal;
+$font_title_color: $color_mono_1;
+$font_title_case: capitalize;
+$font_body_sp: 0.5px;
 
 $m0: 4px;
 $m1: 8px;
@@ -45,6 +47,7 @@ body{
   font-size: $font-size;
   margin: 0;
   padding: 0;
+  letter-spacing: $font_body_sp;
 }
 
 
@@ -90,6 +93,7 @@ a:hover{
 .action-link{
   color: $color_brand_1;
   font-weight: lighter;
+  letter-spacing: $font_body_sp;
 }
 
 .action-link a{
@@ -193,12 +197,13 @@ a:hover{
 
 .top-title{
   font-size: 24px;
+  color: $font_title_color;
   font-weight: $font_title_weight;
   text-transform: $font_title_case;
 }
 
 .top-title a{
-  color: $color_mono;
+  color: $font_title_color;
 }
 
 
@@ -239,7 +244,7 @@ a:hover{
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid $color_mono_3;
+  border-top: 1px solid $color_mono_5;
 }
 
 
@@ -247,14 +252,14 @@ a:hover{
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid $color_mono_4;
+  border-top: 1px solid $color_mono_5;
 }
 
 
 .blog-info{
   font-size: $font_size_5;
   letter-spacing: $font_body_sp; 
-  color: $color_mono_4;
+  color: $color_mono_5;
   padding: $m1;
   margin: 0;
   float: left;
@@ -268,9 +273,10 @@ a:hover{
 .blog-comment-info{
   font-size: $font_size_5;
   letter-spacing: $font_body_sp; 
-  color: $color_mono_2;
+  color: $color_mono_3;
+  font-weight: bold;
   padding: 0 $m1;
-  margin: $m5 0 0 0;
+  margin: $m6 0 $m2 0;
 }
 
 
@@ -286,18 +292,13 @@ a:hover{
   color: $color_mono;
   font-size: $font_size_3;
   padding: 0 $m1;
-  margin-top: $m1;
+  margin-top: $m3;
 }
 
 
-.blog-comment-prompt{
-  color: $color_mono_4;
-  font--size: $font_size_5;
-  margin-bottom: 0;
-  margin-top: $m6;
-  padding: 0 $m1;
-  border-bottom: solid 1px $color_mono_5;
-  width: 100%;
+.blog-modal{
+  letter-spacing: $font_body_sp;
+  color: $color_mono_2;
 }
 
 
@@ -318,6 +319,7 @@ a:hover{
 .blogs-field{
   background-color: $color_mono_8;
   height: 100vh;
+  border-top: solid 1px $color_mono_7;
 }
 
 
@@ -360,7 +362,7 @@ a:hover{
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid $color_mono_3;
+  border-top: 1px solid $color_mono_5;
 }
 
 
@@ -444,7 +446,9 @@ a:hover{
 
 
 .sign-field{
-  border-radius: 8px;
+  border-radius: 6px;
+  border-right: $color_mono_6 1px solid;
+  border-bottom: $color_mono_5 2px solid;
   padding: $m2;
   margin: $m2 $m3;
   background-color: #fff;
@@ -468,6 +472,14 @@ a:hover{
 }
 
 
+.sign-message{
+  margin: $m4 0 $m2 0;
+  text-align: center;
+  color: $color_mono_4;
+  letter-spacing: $font_body_sp;
+}
+
+
 .sign-action{
   border: none;
   margin-bottom: 0;
@@ -483,9 +495,4 @@ a:hover{
 }
 
 
-/* message page */
-.message{
-  margin-top: $m4;
-  text-align: center;
-}
 

@@ -15,9 +15,9 @@
       <hr class="blog-border">
 
       <div class="blog-info">
-        {{ blog.name }} | {{ blog.created }}
+        <a href="/~{{ blog.name }}" class="action-link">{{ blog.name }}</a> | {{ blog.created }}
         {% if name == blog.name %}
-          | <a href="/u-{{ name }}/{{ blog.key().id() }}">Edit</a> 
+          | <a href="/~{{ name }}/{{ blog.key().id() }}">Edit</a> 
           | <span data-toggle="modal" data-target="#deleteModal" class="action-link">Delete</span>
 
           <!-- Modal -->
@@ -25,7 +25,7 @@
             <div class="modal-dialog">
             <!-- Modal content-->
               <div class="modal-content">
-                <div class="modal-body">
+                <div class="modal-body blog-modal">
                   <p>Are you sure you want to delete your post?</p>
                     <span data-dismiss="modal" class="f-left">Cancel</span> | <a href="/delete/{{ blog.key().id() }}">Delete</a>
                 </div>

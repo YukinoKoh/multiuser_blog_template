@@ -3,7 +3,8 @@ body {
   font-family: "Open Sans Condensed", sans-serif;
   font-size: 16px;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  letter-spacing: 0.5px; }
 
 a:hover {
   text-decoration: none; }
@@ -33,7 +34,8 @@ a:hover {
 
 .action-link {
   color: #c5a585;
-  font-weight: lighter; }
+  font-weight: lighter;
+  letter-spacing: 0.5px; }
 
 .action-link a {
   color: #c5a585; }
@@ -113,11 +115,12 @@ a:hover {
 
 .top-title {
   font-size: 24px;
-  font-weight: bold;
+  color: #061f26;
+  font-weight: normal;
   text-transform: capitalize; }
 
 .top-title a {
-  color: #020202; }
+  color: #061f26; }
 
 .top-status {
   float: right;
@@ -146,18 +149,18 @@ a:hover {
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid #525252; }
+  border-top: 1px solid #dcdddf; }
 
 .blog-comment-border {
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid #8a8a8a; }
+  border-top: 1px solid #dcdddf; }
 
 .blog-info {
   font-size: 14px;
   letter-spacing: 0.5px;
-  color: #8a8a8a;
+  color: #dcdddf;
   padding: 8px;
   margin: 0;
   float: left; }
@@ -168,9 +171,10 @@ a:hover {
 .blog-comment-info {
   font-size: 14px;
   letter-spacing: 0.5px;
-  color: #232323;
+  color: #525252;
+  font-weight: bold;
   padding: 0 8px;
-  margin: 40px 0 0 0; }
+  margin: 48px 0 16px 0; }
 
 .blog-like {
   padding: 8px;
@@ -182,16 +186,11 @@ a:hover {
   color: #020202;
   font-size: 18px;
   padding: 0 8px;
-  margin-top: 8px; }
+  margin-top: 24px; }
 
-.blog-comment-prompt {
-  color: #8a8a8a;
-  font--size: 14px;
-  margin-bottom: 0;
-  margin-top: 48px;
-  padding: 0 8px;
-  border-bottom: solid 1px #dcdddf;
-  width: 100%; }
+.blog-modal {
+  letter-spacing: 0.5px;
+  color: #232323; }
 
 .blog-comment {
   height: 48px;
@@ -206,7 +205,8 @@ a:hover {
 /* blogs main page */
 .blogs-field {
   background-color: #fafafa;
-  height: 100vh; }
+  height: 100vh;
+  border-top: solid 1px #f7f7f7; }
 
 .blogs-row {
   margin: 8px 0; }
@@ -239,7 +239,7 @@ a:hover {
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid #525252; }
+  border-top: 1px solid #dcdddf; }
 
 .blogs-content {
   color: #525252;
@@ -299,7 +299,9 @@ a:hover {
   height: 100vh; }
 
 .sign-field {
-  border-radius: 8px;
+  border-radius: 6px;
+  border-right: #f0f0f0 1px solid;
+  border-bottom: #dcdddf 2px solid;
   padding: 16px;
   margin: 16px 24px;
   background-color: #fff;
@@ -317,6 +319,12 @@ a:hover {
   border-radius: 4px;
   background-color: #fff; }
 
+.sign-message {
+  margin: 32px 0 16px 0;
+  text-align: center;
+  color: #8a8a8a;
+  letter-spacing: 0.5px; }
+
 .sign-action {
   border: none;
   margin-bottom: 0;
@@ -327,8 +335,3 @@ a:hover {
   margin-bottom: 0;
   position: absolute;
   top: 0; }
-
-/* message page */
-.message {
-  margin-top: 32px;
-  text-align: center; }

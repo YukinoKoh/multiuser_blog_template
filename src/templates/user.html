@@ -8,19 +8,14 @@
 
 <div class="container-fluid"><div class="blogs-row"><div class="col-sm-12 ptb-2">
   <p>
-    {% if name %}
-      Welcome, {{name}} | 
-    {% endif %}
-    <span class="action-link"><a href="/newblog">
-      <span class="glyphicon glyphicon-pencil"></span> Create a post
-    </a></span>
+    {{ blogger_name }}'s post
   </p>
 </div></div></div>
 
 <div class="container-fluid blogs-field">
   <div class="row blogs-row">
   {% for blog in blogs %}
-    <div class="col-sm-6 no-gutters">
+    <div class="col-md-12 no-gutters">
       <a href="/blog/{{blog.key().id()}}">
         <div class="blogs">
           <pre class="blogs-title">{{blog.title | safe}}</pre>
