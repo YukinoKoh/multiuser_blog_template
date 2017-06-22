@@ -8,18 +8,19 @@ import hashlib
 import hmac
 from google.appengine.ext import db
 
-# handling templates with jinja
+# handling templates with jinja2
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
-# EDIT THIS AREA
+# EDIT THIS AREA for security ----------
 sitename = 'Multiuser blog'
 SECRET = 'imsupersecret'
 RANGE = 5
+# --------------------------------------
 
 
-# Security
+# Security ----------------------------
 # return hased val for cookie
 def hash_str(s):
     return hmac.new(SECRET, s).hexdigest()
@@ -42,6 +43,7 @@ def make_salt():
     return ''.join(random.choice(string.letters) for x in range(RANGE))
 
 
+# return url to redirect
 def url_from_num(blog_id):
     num = int(blog_id)
     url = ''
@@ -52,18 +54,6 @@ def url_from_num(blog_id):
     else:
         url = '/blog/'+blog_id
     return url
-
-
-def message_from_num(blog_id):
-    num = int(blog_id)
-    message = ''
-    if num == 1:
-        message = 'Sign in or sign up tp create a post'
-    if num == 2:
-        message = 'Sign in or sign up to like posts'
-    if num == 3:
-        message = 'Sign in or sign up to comment on posts'
-    return message
 
 
 # Database
@@ -97,11 +87,12 @@ class Blog(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
 
-    # return blog entity of given id
+    # return blog entity of the given id
     @classmethod
     def by_id(cls, uid):
         return Blog.get_by_id(uid, parent=blog_key())
 
+    # return the first entity of the given name
     @classmethod
     def by_name(cls, name):
         b = Blog.all().filter('name =', name).get()
@@ -119,6 +110,7 @@ class Blog(db.Model):
         else:
             return ''
 
+    # return style of like icon
     def get_like_style(cls, name):
         style = ''
         if cls.check_like(name):
@@ -127,6 +119,14 @@ class Blog(db.Model):
             style = 'like'
         return style
 
+    # return like icon
+    def get_like_icon(cls, name):
+        icon = ''
+        if not cls.check_like(name):
+            icon = '-empty'
+        return icon
+
+    # return a path to like/unlike function
     def get_like_or_unlike(cls, name):
         url = ''
         if cls.check_like(name):
@@ -135,12 +135,7 @@ class Blog(db.Model):
             url = 'like'
         return url
 
-    def get_like_icon(cls, name):
-        icon = ''
-        if not cls.check_like(name):
-            icon = '-empty'
-        return icon
-
+    # return message for users trying to like their own post
     def get_like_warning(cls, name):
         warning = ''
         if name:
@@ -183,13 +178,6 @@ class BlogsHandler(webapp2.RequestHandler):
             name = check_secure_cookie(user_id)
             return name
 
-    def get_or_signout_cookie(self):
-        name = self.get_cookie()
-        if name:
-            return name
-        else:
-            self.redirect('/signin')
-
     def set_cookie(self, name):
         self.response.headers['Content-Type'] = 'text/plain'
         cookie_val = make_secure_cookie(str(name))
@@ -213,6 +201,12 @@ class BlogsHandler(webapp2.RequestHandler):
                      error="", blog_id=""):
         self.render("newblog.html", name=name, sitename=sitename, title=title,
                     content=content, error=error, blog_id=blog_id)
+
+    # render message page
+    def render_error(self, name=""):
+        message = 'You can edit/delete only your own post.'
+        self.render("message.html", name=name, sitename=sitename,
+                    message=message)
 
 
 # page to sign up
@@ -283,7 +277,7 @@ class Signin(BlogsHandler):
         if name:
             self.redirect('/')
         if message_num:
-            message = message_from_num(message_num)
+            message = self.message_from_num(message_num)
         self.render("signin.html", sitename=sitename, message=message)
 
     def post(self, blog_id='0', message_num=''):
@@ -299,18 +293,29 @@ class Signin(BlogsHandler):
         params = dict(sitename=sitename, error=error, name=name, pw=pw)
         self.render('signin.html', **params)
 
+    # return prompt message in signin page
+    def message_from_num(self, message_num):
+        num = int(message_num)
+        message = ''
+        if num == 1:
+            message = 'Sign in or sign up tp create a post'
+        if num == 2:
+            message = 'Sign in or sign up to like posts'
+        if num == 3:
+            message = 'Sign in or sign up to comment on posts'
+        return message
+
 
 # sign out
 class Signout(BlogsHandler):
     def get(self):
         self.response.delete_cookie('user_id')
-        self.redirect('/signin/0/0')
+        self.redirect('/signin/0')
 
 
 # page to layout all blogs
 class MainPage(BlogsHandler):
     def get(self):
-        name = ''
         name = self.get_cookie()
         self.delete_or_create_init()
         blogs = Blog.all().order('-created')
@@ -320,8 +325,8 @@ class MainPage(BlogsHandler):
     def delete_or_create_init(self):
         if Blog.all().count() == 0:
             name = 'Instruction'
-            title = 'First blog'
-            content = 'In my mind ...'
+            title = 'FWrite a post'
+            content = 'Give vent to what\'s in your mind...'
             like = 'Instruction'
             blog = Blog(parent=blog_key(), name=name, title=title,
                         content=content, like=like)
@@ -335,7 +340,6 @@ class MainPage(BlogsHandler):
 # page to layout user's blogs
 class UserPage(BlogsHandler):
     def get(self, blogger_name):
-        name = ''
         name = self.get_cookie()
         blogs = Blog.gql("WHERE name = '%s' ORDER BY created DESC"
                          % blogger_name)
@@ -361,7 +365,7 @@ class BlogPage(BlogsHandler):
             self.render("message.html", name=name, sitename=sitename,
                         message=message)
 
-    # deal with comments on the post
+    # deal with comment post/edit on the post
     def post(self, blog_id, comment_id='0'):
         name = self.get_cookie()
         comment = self.request.get("comment")
@@ -410,35 +414,37 @@ class NewBlog(BlogsHandler):
 # page to edit a blog
 class EditBlog(BlogsHandler):
     def get(self, name, blog_id):
-        name = self.get_or_signout_cookie()
         blog = Blog.by_id(int(blog_id))
-        if name == blog.name:
-            self.render_front(name=name, title=blog.title,
-                              content=blog.content, blog_id=blog_id)
+        # check if the post belong to the user
+        if name == self.get_cookie():
+            if name == blog.name:
+                self.render_front(name=name, title=blog.title,
+                                  content=blog.content, blog_id=blog_id)
         else:
-            message = "You can edit/delete only your own blog."
-            self.render("message.html", name=name, sitename=sitename,
-                        message=message)
-
+            self.render_error(name)
 
     def post(self, name, blog_id):
         title = self.request.get("title")
         content = self.request.get("content")
-        if title and content:
-            blog = Blog.by_id(int(blog_id))
-            blog.title = title
-            blog.content = content
-            blog.put()
-            self.redirect(url_from_num(blog_id))
+        # check if the post belong to the user
+        if name == self.get_cookie():
+            if title and content:
+                blog = Blog.by_id(int(blog_id))
+                blog.title = title
+                blog.content = content
+                blog.put()
+                self.redirect(url_from_num(blog_id))
+            else:
+                error = "We need both a subject and some content"
+                self.render_front(name, title, content, error)
         else:
-            error = "We need both a subject and some content"
-            self.render_front(name, title, content, error)
+            self.render_error(name)
 
 
 # delete a blog
 class DeleteBlog(BlogsHandler):
     def get(self, blog_id):
-        name = self.get_or_signout_cookie()
+        name = self.get_cookie()
         blog = Blog.by_id(int(blog_id))
         if name == blog.name and blog:
             title = blog.title
@@ -450,14 +456,13 @@ class DeleteBlog(BlogsHandler):
         elif name == blog.name:
             message = 'We can\'t find the blog.'
         else:
-            message = "You can edit/delete only your own blog."
-        self.render("message.html", name=name, sitename=sitename,
-                    message=message)
+            self.render_error(name)
 
 
 # like a blog
 class LikeBlog(BlogsHandler):
-    def get(self, blog_id, name, page):
+    def get(self, blog_id, page):
+        name = self.get_cookie()
         blog = Blog.by_id(int(blog_id))
         if not blog.check_like(name):
             like = str(blog.like)+','+name
@@ -472,7 +477,8 @@ class LikeBlog(BlogsHandler):
 
 # like a blog
 class UnlikeBlog(BlogsHandler):
-    def get(self, blog_id, name, page):
+    def get(self, blog_id, page):
+        name = self.get_cookie()
         blog = Blog.by_id(int(blog_id))
         if blog.check_like(name):
             like_list = str(blog.like).split(',')
@@ -491,7 +497,7 @@ class UnlikeBlog(BlogsHandler):
 # delete a comment
 class DeleteComment(BlogsHandler):
     def get(self, blog_id, comment_id):
-        name = self.get_or_signout_cookie()
+        name = self.get_cookie()
         c = Comment.by_id(int(comment_id))
         if c:
             c.delete()
@@ -506,10 +512,8 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/signin/([0-9]+)/([0-9])', Signin),
                                ('/signout', Signout),
                                ('/newblog', NewBlog),
-                               ('/like/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)',
-                                LikeBlog),
-                               ('/unlike/([0-9]+)/([a-zA-Z0-9_-]+)/([0-9]+)',
-                                UnlikeBlog),
+                               ('/like/([0-9]+)/([0-9]+)', LikeBlog),
+                               ('/unlike/([0-9]+)/([0-9]+)', UnlikeBlog),
                                ('/blog/([0-9]+)', BlogPage),
                                ('/delete/([0-9]+)', DeleteBlog),
                                ('/~([a-zA-Z0-9_-]+)', UserPage),

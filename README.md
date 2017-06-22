@@ -2,6 +2,8 @@
 
 It's a  *blog* web app template, using [Google App Engine with Python](https://cloud.google.com/python/) and a Python template engine, [Jinja2](http://jinja.pocoo.org/).
 
+You can find sample [here](https://blog-template-171415.appspot.com/)
+
 This app includes..
 - Main pages to layout all posts
 - Page to layout individual users' all posts

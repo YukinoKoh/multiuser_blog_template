@@ -43,7 +43,7 @@
             <a href="/">
         {% else %}
           <div class="{{ blog.get_like_style(name) }}">
-            <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/{{ name }}/3">
+            <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/3">
               <span class="glyphicon glyphicon-heart{{ blog.get_like_icon(name) }}"></span>
         {% endif %}
       {% else %}
