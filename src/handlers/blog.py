@@ -7,7 +7,12 @@ from models import Comment
 # page to show an individual blog
 class BlogPage(BlogsHandler):
     def get(self, blog_id, comment_id='0'):
-        name = self.get_cookie()
+        # check signin condition
+        if self.user:
+            name = self.get_cookie()
+        # if not signin, browse as anonymous
+        else:
+            name=''
         blog = Blog.get_by_id(int(blog_id))
         if blog:
             content = blog.content.replace('\n', '<br>')
@@ -21,24 +26,30 @@ class BlogPage(BlogsHandler):
             self.render("message.html", name=name, sitename=settings.sitename,
                         message=message)
 
-    # deal with comment post/edit on the post
+    # deal with post/edit comment
     def post(self, blog_id, comment_id='0'):
-        name = self.get_cookie()
-        comment = self.request.get("comment")
-        edit_comment = self.request.get("edit_comment")
-        url = self.url_from_num(blog_id)
-        blog = Blog.get_by_id(int(blog_id))
-        # new comment
-        if name and comment:
-            c = Comment(blog=blog,
-                        name=name, comment=comment)
-            c.put()
-            self.redirect(url)
-        # efit comment
-        if name and edit_comment:
-            c = Comment.get_by_id(int(comment_id))
-            c.comment = edit_comment
-            c.put()
-            self.redirect(url)
+        # check if user signin properly to act
+        if self.user:
+            comment = self.request.get("comment")
+            edit_comment = self.request.get("edit_comment")
+            url = self.url_from_num(blog_id)
+            blog = Blog.get_by_id(int(blog_id))
+            name = self.get_cookie()
+            # new comment
+            if comment:
+                c = Comment(blog=blog,
+                            name=name, comment=comment)
+                c.put()
+                self.redirect(url)
+            # efit comment
+            elif edit_comment:
+                c = Comment.get_by_id(int(comment_id))
+                c.comment = edit_comment
+                c.put()
+                self.redirect(url)
+            # if no input, just render the post 
+            else:
+                self.redirect('/blog/'+str(blog_id))
+        # let user signed to comment
         else:
             self.redirect('/signin/'+str(blog_id)+'/3')

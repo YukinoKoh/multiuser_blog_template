@@ -8,8 +8,7 @@ from models import User
 class Signup(BlogsHandler):
     def get(self):
         # if valid cookie, let user in
-        name = self.get_cookie()
-        if name:
+        if self.user:
             self.redirect('/')
         else:
             self.render("signup.html", sitename=settings.sitename)
@@ -63,5 +62,4 @@ class Signup(BlogsHandler):
             user = self.make_entity_user(name, pw, email)
             self.set_cookie(user.name)
             self.redirect('/')
-
 
