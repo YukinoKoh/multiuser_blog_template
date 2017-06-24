@@ -19,11 +19,14 @@ This app includes..
 ## File structure
 - `src`: Resource folder
   - `app.yaml`: yaml file for Google App Engine
-  - `blog.py`: Python to generate blog platform
+  - `main.py`: this python file imports modules and handles them
+  - `settings.py`: containes site info, such as name, hash keys.
+  - `handlers`: contains python files for jinja2 page handler
+    - `templates`: containes templates html files for the generated site pages.
+  - `models`: contains python files for app engine db model
   - `css`: This folder inludes css file(s) for the generated site pages.
   - `sass`: This folder includes sass file(s) to write css files.
   - `img`: This folder includes image files for the generated site pages. 
-  - `templates`: This folder includes templates html files for the generated site pages.
 - `img`: This folder includes image files for this README.
 - `Gruntfile.js`: It is to compile sass to css.
 - `Gruntfile.yml`: Same as the above.
@@ -49,24 +52,25 @@ $ dev_appserver.py .
 ## Usage
 
 ### [SECURITY] Modify hash codes for Security
-Modify the following in `notes.py` in `src`. 
 
 ##### Set SALT
-```
+You can modify the following in `settings.py` in `src`. 
+```python
 RANGE = 5
 ```
 
 ##### Set SECRET
-```
+You can modify the following in `settings.py` in `src`. 
+```python
 SECRET = 'your_secret_key'
 ```
 
 ##### Can change hash library
-You can change hash method. For example, around these codes.
-```
+You can change hash methods in `util.py` in `src`/`handlers`.
+```python
 def hash_str(s):
     return hmac.new(SECRET, s).hexdigest()
-``` 
+``` python
 and/or 
 ```
 h = hashlib.sha256(name+pw+salt).hexdigest()
@@ -90,28 +94,12 @@ sitename = 'Your blog name'
 ### Database
 This app as a default has 3 entity kinds: User, Blog, and Comment
 
-```
-class User(db.Model):
-    name = db.StringProperty(required=True)
-    pw_hash = db.StringProperty(required=True)
-    email = db.StringProperty()
-```
-```
-class Blog(db.Model):
-    name = db.StringProperty(required=True)
-    title = db.TextProperty(required=True)
-    content = db.TextProperty(required=True)
-    like = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    last_modified = db.DateTimeProperty(auto_now_add=True)
-```
-```
-class Comment(db.Model):
-    blog_id = db.StringProperty(required=True)
-    name = db.TextProperty(required=True)
-    comment = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-```
+- User: `user.py` in `models`
+- Blog: `blog.py` in `models`
+  - Blog entities [referenced](https://cloud.google.com/appengine/articles/modeling#one-to-many) to a User entity
+- Comment: `comment.py` in `models`
+  - Comment entities [referenced](https://cloud.google.com/appengine/articles/modeling#one-to-many) to a Blog entity
+
 db.Model is inherited from [Model Class](https://cloud.google.com/appengine/docs/standard/python/datastore/modelclass).
 
 
