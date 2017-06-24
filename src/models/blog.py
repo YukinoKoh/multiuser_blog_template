@@ -8,6 +8,11 @@ def blog_key(name='default'):
     # return db.Key.from_path('posts', name)
 
 
+# check if blog exist, if so return blog
+def post_exists(blog_id):
+    return Blog.get_by_id(int(blog_id))
+
+
 class Blog(db.Model):
     user = db.ReferenceProperty(User,
                                 collection_name='user_blogs')
@@ -18,16 +23,14 @@ class Blog(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
 
-    # return blog entity of the given id
-    @classmethod
-    def by_id(cls, uid):
-        return Blog.get_by_id(uid, parent=blog_key())
-
-    # return the first entity of the given name
     @classmethod
     def by_name(cls, name):
         b = Blog.all().filter('name =', name).get()
         return b
+
+    # return if user owns the blog
+    def check_auth(cls, name):
+        return cls.name == name
 
     def check_like(cls, name):
         like_list = str(cls.like).split(',')

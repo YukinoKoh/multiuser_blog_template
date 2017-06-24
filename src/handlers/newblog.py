@@ -40,21 +40,27 @@ class NewBlog(BlogsHandler):
 
 # page to edit a blog
 class EditBlog(BlogsHandler):
-    def get(self, name, blog_id):
+    def get(self, author_name, blog_id):
         # check if user signin properly
         if self.user:
-            blog = Blog.get_by_id(int(blog_id))
-            # check if the post belong to the user
-            if name == self.get_cookie():
-                if name == blog.name:
+            name = self.get_cookie()
+            # check if blog exist
+            if self.exist_blog(blog_id):
+                blog = Blog.get_by_id(int(blog_id))
+                # check if the post belong to the user
+                if blog.check_auth(name):
                     self.render_front(name=name, title=blog.title,
                                       content=blog.content, blog_id=blog_id)
-            # error let them signin properly
+                # error user tryingt to edit  someone else's blog
+                else:
+                    self.redirect('/signout/0/4')
+            # the blog doesn't exist
             else:
-                self.redirect('/signout/0/4')
+                message = 'We can\'t find the blog.'
+                self.render_message(message, name)
         # error let them signin properly
         else:
-            self.redirect('/signout/0/4')
+            self.redirect('/signout/'+blog_id+'/4')
 
     def post(self, name, blog_id):
         # check if user signin properly
@@ -62,7 +68,7 @@ class EditBlog(BlogsHandler):
             title = self.request.get("title")
             content = self.request.get("content")
             # check if the post belong to the user
-            if name == self.get_cookie():
+            if blog.check_auth(name):
                 if title and content:
                     blog = Blog.get_by_id(int(blog_id))
                     blog.title = title
@@ -72,7 +78,7 @@ class EditBlog(BlogsHandler):
                 else:
                     error = "We need both a subject and some content"
                     self.render_front(name, title, content, error)
-            # error let them signin properly
+            # error user tryingt to edit  someone else's blog
             else:
                 self.redirect('/signin/0/4')
         # error let them signin properly

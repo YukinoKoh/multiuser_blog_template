@@ -14,3 +14,7 @@ class Comment(db.Model):
     comment = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
+    # return if user owns the blog
+    def check_auth(cls, name):
+        return cls.name == name
+

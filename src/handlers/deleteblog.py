@@ -10,11 +10,11 @@ class DeleteBlog(BlogsHandler):
         # check user signin properly
         if self.user:
             name = self.get_cookie()
-            blog = Blog.by_id(int(blog_id))
-            # check if blog exists
-            if blog:
-                # check outh
-                if name == blog.name:
+            # check if blog exist
+            if self.exist_blog(blog_id):
+                blog = Blog.get_by_id(int(blog_id))
+                # check if user owns the blog
+                if blog.check_auth(name):
                     title = blog.title
                     comments = blog.blog_comments
                     for c in comments:
@@ -22,9 +22,10 @@ class DeleteBlog(BlogsHandler):
                     blog.delete()
                     message = 'Your blog \''+title+'\' has been deleted.'
                     self.render_message(message, name)
+                # error user tryingt o delete someone else's blog
                 else:
-                    self.render_error(name)
-            # in case the blog doesn't exist
+                    self.redirect('/signout/0/4')
+            # the blog doesn't exist
             else:
                 message = 'We can\'t find the blog.'
                 self.render_message(message, name)
@@ -38,11 +39,17 @@ class DeleteComment(BlogsHandler):
         if self.user:
             name = self.get_cookie()
             # check if comment exist
-            c = Comment.get_by_id(int(comment_id))
-            if c:
+            if exist_comment(comment_id):
+                c = Comment.get_by_id(int(comment_id))
                 # check auth
-                if name == c.name:
+                if comment.check_auth(name):
                     c.delete()
+                # error user tryingt o delete someone else's comment
+                else:
+                    self.redirect('/signout/0/4')
+            # comment doesn't exist, maybe user click multiple times..
+            else:
+                pass
             url = self.url_from_num(blog_id)
             self.redirect(url)
         # error, let user signout

@@ -9,6 +9,8 @@ import hmac
 
 import settings
 from models import User
+from models import Blog
+from models import Comment
 
 
 # handling templates with jinja2
@@ -113,4 +115,12 @@ class BlogsHandler(webapp2.RequestHandler):
         else:
             url = '/blog/'+blog_id
         return url
+
+    # check if blog exist, if so return blog
+    def exist_blog(self, blog_id):
+        return Blog.get_by_id(int(blog_id))
+
+    # check if comment  exist, if so return blog
+    def exist_comment(self, comment_id):
+        return Comment.get_by_id(int(comment_id))
 
