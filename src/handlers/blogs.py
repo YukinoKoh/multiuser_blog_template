@@ -8,7 +8,7 @@ class MainPage(BlogsHandler):
     def get(self):
         if not User.get_by_key_name('Instruction'):
             name = 'Instruction'
-            pw_hash = make_pw_hash(name, settings.SECRET)
+            pw_hash = self.make_pw_hash(name, settings.SECRET)
             instruction = User(key_name=name, name=name, pw_hash=pw_hash)
             instruction.put()
         if User.get_by_key_name('Instruction').user_blogs.count() < 1:
