@@ -19,6 +19,7 @@ SECRET = 'imsupersecret'
 RANGE = 5
 # --------------------------------------
 
+     
 
 # Security ----------------------------
 # return hased val for cookie
@@ -42,6 +43,11 @@ def check_secure_cookie(h):
 def make_salt():
     return ''.join(random.choice(string.letters) for x in range(RANGE))
 
+def make_pw_hash(name, pw, salt=None):
+    if not salt:
+        salt = make_salt()
+    h = hashlib.sha256(name+pw+salt).hexdigest()
+    return '%s,%s' % (salt, h)
 
 # return url to redirect
 def url_from_num(blog_id):
@@ -76,11 +82,14 @@ class User(db.Model):
 
 # Blog db
 def blog_key(name='default'):
-    return db.Key.from_path('posts', name)
+    return None
+    # return db.Key.from_path('posts', name)
 
 
 class Blog(db.Model):
-    name = db.StringProperty(required=True)
+    user = db.ReferenceProperty(User,
+                                collection_name='user_blogs')
+    name =  db.StringProperty(required=True)
     title = db.TextProperty(required=True)
     content = db.TextProperty(required=True)
     like = db.TextProperty(required=True)
@@ -149,7 +158,8 @@ def comment_key(name='default'):
 
 
 class Comment(db.Model):
-    blog_id = db.StringProperty(required=True)
+    blog = db.ReferenceProperty(Blog,
+                                collection_name='blog_comments')
     name = db.TextProperty(required=True)
     comment = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -185,11 +195,6 @@ class BlogsHandler(webapp2.RequestHandler):
             'Set-Cookie',
             '%s=%s; Path=/' % ('user_id', cookie_val))
 
-    def make_pw_hash(self, name, pw, salt=None):
-        if not salt:
-            salt = make_salt()
-        h = hashlib.sha256(name+pw+salt).hexdigest()
-        return '%s,%s' % (salt, h)
 
     def valid_pw(self, user, pw):
         pw_hash = user.pw_hash.split(',')[1]
@@ -313,28 +318,24 @@ class Signout(BlogsHandler):
         self.redirect('/signin/0')
 
 
+
 # page to layout all blogs
 class MainPage(BlogsHandler):
     def get(self):
-        name = self.get_cookie()
-        self.delete_or_create_init()
-        blogs = Blog.all().order('-created')
-        self.render("main.html", name=name, sitename=sitename, blogs=blogs)
-
-    # check note and if note create one as instruction
-    def delete_or_create_init(self):
-        if Blog.all().count() == 0:
+        if not User.get_by_key_name('Instruction'):
             name = 'Instruction'
-            title = 'FWrite a post'
-            content = 'Give vent to what\'s in your mind...'
-            like = 'Instruction'
-            blog = Blog(parent=blog_key(), name=name, title=title,
-                        content=content, like=like)
-            blog.put()
-        elif Blog.all().count() > 1:
-            if Blog.by_name('Instruction'):
-                b = Blog.by_name('Instruction')
-                b.delete()
+            pw_hash = make_pw_hash(name, SECRET)
+            instruction = User(key_name=name, name=name, pw_hash=pw_hash)
+            instruction.put()
+        if User.get_by_key_name('Instruction').user_blogs.count() < 1:
+             Blog(user = instruction,
+             name = 'Instruction',
+             title = 'Write a post',
+             content = 'Give vent to what\'s in your mind...',
+             like = 'Instruction').put()
+        blogs = User.get_by_key_name('Instruction').user_blogs 
+        name = self.get_cookie()
+        self.render("main.html", name=name, sitename=sitename, blogs=blogs)
 
 
 # page to layout user's blogs
