@@ -16,9 +16,12 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
+
 # make randam salt for password
 def make_salt():
-    return ''.join(random.choice(string.letters) for x in range(settings.RANGE))
+    return ''.join(random.choice(string.letters) for x in
+                   range(settings.RANGE))
+
 
 # return hased val for cookie
 def hash_str(s):
@@ -61,7 +64,7 @@ class BlogsHandler(webapp2.RequestHandler):
         if user_id:
             name = self.check_secure_cookie(user_id)
             u = User.get_by_key_name(name)
-            if  u:
+            if u:
                 return name
 
     def set_cookie(self, name):
@@ -79,8 +82,8 @@ class BlogsHandler(webapp2.RequestHandler):
     # render a front page to add/edit a blog
     def render_front(self, name="", title="", content="",
                      error="", blog_id=""):
-        self.render("newblog.html", name=name, sitename=settings.sitename, title=title,
-                    content=content, error=error, blog_id=blog_id)
+        self.render("newblog.html", name=name, sitename=settings.sitename,
+                    title=title, content=content, error=error, blog_id=blog_id)
 
     # render erroe page
     def render_error(self, name=""):

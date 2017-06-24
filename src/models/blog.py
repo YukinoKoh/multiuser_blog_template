@@ -1,6 +1,7 @@
 from google.appengine.ext import db
 from models import User
 
+
 # Blog db
 def blog_key(name='default'):
     return None
@@ -10,14 +11,14 @@ def blog_key(name='default'):
 class Blog(db.Model):
     user = db.ReferenceProperty(User,
                                 collection_name='user_blogs')
-    name =  db.StringProperty(required=True)
+    name = db.StringProperty(required=True)
     title = db.TextProperty(required=True)
     content = db.TextProperty(required=True)
     like = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
 
-   # return blog entity of the given id
+    # return blog entity of the given id
     @classmethod
     def by_id(cls, uid):
         return Blog.get_by_id(uid, parent=blog_key())
@@ -40,7 +41,7 @@ class Blog(db.Model):
         else:
             return ''
 
-   # return style of like icon
+    # return style of like icon
     def get_like_style(cls, name):
         style = ''
         if cls.check_like(name):

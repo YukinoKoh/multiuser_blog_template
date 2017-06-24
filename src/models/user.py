@@ -1,5 +1,6 @@
 from google.appengine.ext import db
 
+
 # Database
 # User db
 def user_key(name='default'):

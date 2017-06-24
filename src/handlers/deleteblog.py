@@ -3,6 +3,7 @@ import settings
 from models import Blog
 from models import Comment
 
+
 # delete a blog
 class DeleteBlog(BlogsHandler):
     def get(self, blog_id):

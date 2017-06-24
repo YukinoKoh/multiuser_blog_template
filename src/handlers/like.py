@@ -2,6 +2,7 @@ from util import BlogsHandler
 import settings
 from models import Blog
 
+
 # like a blog
 class LikeBlog(BlogsHandler):
     def get(self, blog_id, page):

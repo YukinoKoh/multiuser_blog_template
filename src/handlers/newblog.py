@@ -3,6 +3,7 @@ import settings
 from models import User
 from models import Blog
 
+
 # page to create a new blog
 class NewBlog(BlogsHandler):
     def get(self):

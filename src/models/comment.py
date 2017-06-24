@@ -1,6 +1,7 @@
 from google.appengine.ext import db
 from models import Blog
 
+
 # Comment db
 def comment_key(name='default'):
     return db.Key.from_path('comment', name)

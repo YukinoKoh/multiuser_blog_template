@@ -2,6 +2,7 @@ from util import BlogsHandler
 import settings
 from models import User
 
+
 # page to sign in
 class Signin(BlogsHandler):
     def get(self, blog_id='', message_num=''):
@@ -19,7 +20,7 @@ class Signin(BlogsHandler):
     def post(self, blog_id='0', message_num=''):
         name = self.request.get("name")
         pw = self.request.get("pw")
-        # check user has entered name and pw 
+        # check user has entered name and pw
         if name and pw:
             user = User.by_name(name)
             # check if name and password is valid
@@ -30,7 +31,8 @@ class Signin(BlogsHandler):
                 self.redirect(url)
         # if name and pw is wrong, show error
         error = 'Username or password seems wrong.'
-        params = dict(sitename=settings.sitename, error=error, name=name, pw=pw)
+        params = dict(sitename=settings.sitename, error=error, name=name,
+                      pw=pw)
         self.render('signin.html', **params)
 
     # return prompt message in signin page

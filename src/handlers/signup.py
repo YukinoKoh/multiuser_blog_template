@@ -3,6 +3,7 @@ from util import BlogsHandler
 import settings
 from models import User
 
+
 # page to sign up
 class Signup(BlogsHandler):
     def get(self):
@@ -35,8 +36,8 @@ class Signup(BlogsHandler):
         email_re = re.compile(r"^[\S]+@[\S]+.[\S]+$")
 
         have_error = False
-        params = dict(sitename=settings.sitename, name=name, pw=pw, verify=verify,
-                      email=email)
+        params = dict(sitename=settings.sitename, name=name, pw=pw,
+                      verify=verify, email=email)
         if not self.valid(name_re, name):
             params['name_error'] = 'It doesn\'t seem a valid name'
             have_error = True
