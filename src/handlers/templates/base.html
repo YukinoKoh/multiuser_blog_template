@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>{{ sitename }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="img/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="img/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+
+<div class="container-fluid top-header"><div class="row top">
+  <div class="col-sm-12 top-title">
+    <a href="/">
+      <img src="/img/0_logo.svg" alt={{ sitename }} class="top-logo">
+      {{ sitename }}
+    </a>
+    <!-- user action navi-->
+    <div class="dropdown top-status action-link">
+      <button class="top-button dropdown-toggle" type="button" data-toggle="dropdown">
+        <span class="glyphicon glyphicon-user"></span>
+        <span class="caret"></span></button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li class="dropdown-header">{{ name }}</li>
+        <li><a href="/newblog">Create a post</a></li>
+        <li><a href="/signout">Sign out</a></li>
+      </ul>
+    </div>     
+  </div>
+</div></div>
+
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

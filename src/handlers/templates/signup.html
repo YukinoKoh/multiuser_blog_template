@@ -1,0 +1,33 @@
+{% extends "base_intro.html" %}
+
+{% block content %}
+
+<div class="container-fluid sign-container"><div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="sign-field text-center">
+      <form method="post">
+          <div class="form-field">
+            <p class="error">{{ name_error }}</p>
+            <input name="name" class="form-input" placeholder="Username" value="{{ name }}">
+          </div>
+          <div class="form-field">
+            <p class="error">{{ pw_error }}</p>
+            <input name="pw" class="form-input" placeholder="Passowrd" value="{{ pw }}">
+          </div>
+          <div class="form-field">
+            <p class="error">{{ verify_error }}</p>
+            <input name="verify" class="form-input" placeholder="Verify password" value="{{ verify }}">
+          </div>
+          <div class="form-field">
+            <p class="error">{{ email_error }}</p>
+            <input name="email" class="form-input" placeholder="Email (optional)" value="{{ email }}">
+          </div>
+        <input type="submit" class="sign-action action-link" value="Sign up" >
+      </form>
+    </div>
+    <div class="sign-field action-link">
+      <a href="/signin">Sign in</a>
+    </div>
+  </div>
+</div></div>
+{% endblock %}

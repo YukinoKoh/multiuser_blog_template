@@ -1,0 +1,112 @@
+{% if name %}
+  {% extends "base.html" %}
+{% else %}
+  {% extends "base_intro.html" %}
+{% endif %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="blog-title">{{ blog.title }}</div>
+      <hr class="blog-border">
+      <div class="blog-info">
+        <a href="/~{{ blog.name }}" class="action-link">{{ blog.name }}</a> | {{ blog.created }}
+
+        {% if name == blog.name %}
+          | <a href="/~{{ name }}/{{ blog.key().id() }}">Edit</a> 
+          | <span data-toggle="modal" data-target="#deleteModal" class="action-link">Delete</span>
+
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal" role="dialog">
+            <div class="modal-dialog">
+            <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-body blog-modal">
+                  <p>Are you sure you want to delete your post?</p>
+                    <span data-dismiss="modal" class="f-left">Cancel</span> | <a href="/delete/{{ blog.key().id() }}">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+      <div class="blog-like">
+      {% if name %}
+        {% if name == blog.name %}
+          <div class="like">
+            <div class="tooltips"><span class="glyphicon glyphicon-heart-empty"></span>
+              <span class="tooltipstext">{{ blog.get_like_warning(name) }}</span></div>
+            <a href="/">
+        {% else %}
+          <div class="{{ blog.get_like_style(name) }}">
+            <a href="/{{ blog.get_like_or_unlike(name) }}/{{ blog.key().id() }}/3">
+              <span class="glyphicon glyphicon-heart{{ blog.get_like_icon(name) }}"></span>
+        {% endif %}
+      {% else %}
+        <div class="like">
+          <a href="/signin/{{ blog.key().id() }}/2">
+            <span class="glyphicon glyphicon-heart-empty"></span>
+      {% endif %}
+            {{ blog.count_like() }}
+          </a>
+        </div>
+      </div>
+     </div>
+   </div>
+
+   <div class="row">
+     <div class="col-sm-8 col-sm-offset-2">
+        <!-- any white space witll stay as space -->
+      <p class="blog-content">{{ content | safe }}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2 mt-3">
+      <p class="blog-comment-info">Comment</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <hr class="blog-comment-border">
+    </div>
+  </div>
+  {% for comment in comments %}
+  <div class="row ptb-2 plr-1">
+    <div class="col-sm-8 col-sm-offset-2">
+    {% if comment.key().id() == comment_id %}
+      <form method="post" class="post-form">
+        <textarea name="edit_comment" class="form-input blog-comment">{{ comment.comment }}</textarea>
+        <br>
+        <input type="submit" class="blog-comment-submit" value="Update comment">
+      </form>
+    {% else %}
+      {{ comment.comment }}
+      <br><span class="blog-info"><a href="/~{{ comment.name }}" class="action-link">{{ comment.name }}</a> | {{ comment.created }}
+        {% if name == comment.name %}
+          | <a href="/blog/{{ blog.key().id() }}/{{ comment.key().id() }}">Edit</a>
+          | <a href="/commentdelete/{{ blog.key().id() }}/{{ comment.key().id() }}">Delete</a>
+        {% endif %}
+      </span>
+    {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <form method="post" class="post-form">
+        <textarea name="comment" class="form-input blog-comment" placeholder='How do you think?'></textarea>
+        <br>
+        <input type="submit" class="blog-comment-submit" value="Comment">
+      </form>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,27 @@
+{% extends "base_intro.html" %}
+
+{% block content %}
+
+<div class="container-fluid sign-container"><div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="sign-field">
+    {% if message %}
+      <div class="sign-message">{{ message }}<hr></div>
+    {% endif %}
+      <form method="post">
+        <div class="form-field">
+          <p class="error">{{ error }}</p>
+          <input name="name" class="form-input" placeholder="Username" value="{{ name }}">
+        </div>
+        <div class="form-field">
+          <input name="pw" class="form-input" placeholder="Passowrd" value="{{ pw }}">
+        </div>
+        <input type="submit" class="sign-action action-link" value="Sign in" >
+      </form>
+    </div>
+    <div class="sign-field action-link">
+      <a href="/signup">Sign up</a>
+    </div>
+  </div>
+</div></div>
+{% endblock %}
