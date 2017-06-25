@@ -12,7 +12,7 @@ class MainPage(BlogsHandler):
             name = self.get_cookie()
         # or let them browse
         else:
-            name=''
+            name = ''
         # show instruction if no blog
         if not User.get_by_key_name('Instruction'):
             name = 'Instruction'
@@ -36,7 +36,7 @@ class UserPage(BlogsHandler):
             name = self.get_cookie()
         # or let them browse
         else:
-            name=''
+            name = ''
         blogs = User.get_by_key_name(blogger_name).user_blogs
         self.render("user.html", name=name, sitename=settings.sitename,
                     blogger_name=blogger_name, blogs=blogs)

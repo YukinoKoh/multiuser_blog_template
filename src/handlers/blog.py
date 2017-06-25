@@ -12,7 +12,7 @@ class BlogPage(BlogsHandler):
             name = self.get_cookie()
         # if not signin, browse as anonymous
         else:
-            name=''
+            name = ''
         blog = Blog.get_by_id(int(blog_id))
         if blog:
             content = blog.content.replace('\n', '<br>')
@@ -47,7 +47,7 @@ class BlogPage(BlogsHandler):
                 c.comment = edit_comment
                 c.put()
                 self.redirect(url)
-            # if no input, just render the post 
+            # if no input, just render the post
             else:
                 self.redirect('/blog/'+str(blog_id))
         # let user signed to comment

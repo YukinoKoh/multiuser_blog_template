@@ -1,5 +1,5 @@
 def init():
-    global sitename 
+    global sitename
     global SECRET
     global RANGE
     # EDIT THIS AREA for security ----------

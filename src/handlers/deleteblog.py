@@ -33,6 +33,7 @@ class DeleteBlog(BlogsHandler):
         else:
             self.redirect('/signout/0/4')
 
+
 # delete a comment
 class DeleteComment(BlogsHandler):
     def get(self, blog_id, comment_id):

@@ -12,7 +12,7 @@ class Signin(BlogsHandler):
             name = self.get_cookie()
             self.redirect('/')
         else:
-        # check if user directed with error message
+            # check if user directed with error message
             if message_num:
                 message = self.message_from_num(message_num)
         # render signin page

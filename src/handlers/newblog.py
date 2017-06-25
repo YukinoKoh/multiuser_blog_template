@@ -31,7 +31,8 @@ class NewBlog(BlogsHandler):
                 url = self.url_from_num(str(blog_id))
                 self.redirect(url)
             else:
-                error = "Write both a subject and some content to create a post."
+                error = '''Write both a subject and some content to create
+                           a post.'''
                 self.render_front(name, title, content, error)
         # let user signin to create a post
         else:
