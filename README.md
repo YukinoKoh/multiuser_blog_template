@@ -12,6 +12,9 @@ This app includes..
 - Add/Edit/Delete posts function
 - Add/Edit/Delete comments function
 - Like/Unlike posts function
+- Comment on posts
+- Signin checks that makes sure user signed in properly
+- Auth checks that alllows user to delete/edit own posts/comments.
 
 ![blog sample image](img/sample_screen.jpg)
 
@@ -19,15 +22,17 @@ This app includes..
 ## File structure
 - `src`: Resource folder
   - `app.yaml`: yaml file for Google App Engine
-  - `main.py`: this python file imports modules and handles them
-  - `settings.py`: containes site info, such as name, hash keys.
-  - `handlers`: contains python files for jinja2 page handler
-    - `templates`: containes templates html files for the generated site pages.
-  - `models`: contains python files for app engine db model
-  - `css`: This folder inludes css file(s) for the generated site pages.
-  - `sass`: This folder includes sass file(s) to write css files.
-  - `img`: This folder includes image files for the generated site pages. 
-- `img`: This folder includes image files for this README.
+  - `main.py`: Python file to import modules
+  - `settings.py`: Python file to manage site name, hash keys
+  - `handlers` (folder):
+    - `util.py` etc: Python files for jinja2 handlers
+    - `templates` (folder): Of template html files.
+  - `models` (folder):
+    - `user.py` etc: Python files for app engine db model
+  - `css` (folder): Of css file(s)
+  - `sass` (folder): Of sass file(s)
+  - `img` (folder): Of image files 
+- `img` (folder): Of image files for this README.
 - `Gruntfile.js`: It is to compile sass to css.
 - `Gruntfile.yml`: Same as the above.
 - `node_modules`: Same as the above.
@@ -70,9 +75,9 @@ You can change hash methods in `util.py` in `src`/`handlers`.
 ```python
 def hash_str(s):
     return hmac.new(SECRET, s).hexdigest()
-``` python
-and/or 
 ```
+and/or 
+``` python
 h = hashlib.sha256(name+pw+salt).hexdigest()
 ```
 
