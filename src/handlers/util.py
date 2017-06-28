@@ -29,6 +29,18 @@ def make_salt():
 def hash_str(s):
     return hmac.new(settings.SECRET, s).hexdigest()
 
+def signin_required(self):
+    """
+    A decorator to confirm a user is signed in or redirect as needed.
+    """
+    def signin(self):
+        # Redirect to login if user not logged in, else execute func.
+        if not self.user:
+            self.redirect('signout/1/1')
+        else:
+            func(self)
+    return signin
+
 
 # Security ----------------------------
 # base handler
@@ -86,6 +98,7 @@ class BlogsHandler(webapp2.RequestHandler):
         name = self.read_secure_cookie('user_id')
         self.user = name and User.get_by_key_name(name)
 
+
     # simply return user name
     def get_cookie(self):
         user_id = self.request.cookies.get('user_id')
@@ -94,7 +107,7 @@ class BlogsHandler(webapp2.RequestHandler):
         return name
 
     # render a front page to add/edit a blog
-    def render_front(self, name="", title="", content="",
+    def render_newblog(self, name="", title="", content="",
                      error="", blog_id=""):
         self.render("newblog.html", name=name, sitename=settings.sitename,
                     title=title, content=content, error=error, blog_id=blog_id)
