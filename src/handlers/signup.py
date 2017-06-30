@@ -1,5 +1,5 @@
 import re
-from util import BlogsHandler
+from bloghandler import BlogsHandler
 import settings
 from models import User
 

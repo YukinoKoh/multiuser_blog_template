@@ -1,70 +1,62 @@
-from util import BlogsHandler
+from bloghandler import BlogsHandler
 import settings
 from models import Blog
 
 
+def return_url(blog_id, page):
+    if page == '0':
+        url = '/'
+    else:
+        url = self.url_from_num(blog_id)
+    return url
+
 # like a blog
 class LikeBlog(BlogsHandler):
     def get(self, blog_id, page):
-        # check if user signin proplerly
-        if self.user:
-            name = self.get_cookie()
-            # check if blog exist
-            if self.exist_blog(blog_id):
-                blog = Blog.get_by_id(int(blog_id))
-                # check if user has liked the post
-                if not blog.check_like(name):
-                    like = str(blog.like)+','+name
-                    blog.like = like
-                    blog.put()
-                # something wrong? user clicked too many times?
-                else:
-                    pass
-                # tell user reacting page
-                if page == '0':
-                    url = '/'
-                else:
-                    url = self.url_from_num(blog_id)
-                self.redirect(url)
-            # the blog doesn't exist
+        if not self.user:
+            self.redirect('signout/1/2')
+        name = self.get_cookie()
+        # check if blog exist
+        if self.exist_blog(blog_id):
+            blog = Blog.get_by_id(int(blog_id))
+            # check if user has liked the post
+            if not blog.check_like(name):
+                like_list = blog.like
+                like_list.append(str(name))
+                blog.like = like_list
+                blog.put()
+            # something wrong? user clicked too many times?
             else:
-                message = 'We can\'t find the blog.'
-                self.render_message(message, name)
-        # let user sign in to like post
+                pass
+            url = return_url(blog_id,  page)
+            self.redirect(url)
+        # the blog doesn't exist
         else:
-            self.redirect('/signout/'+blog_id+'/2')
+            message = 'We can\'t find the blog.'
+            self.render_message(message, name)
 
 
-# like a blog
+# Unlike a blog
 class UnlikeBlog(BlogsHandler):
     def get(self, blog_id, page):
-        # check if user signin proplerly
-        if self.user:
-            name = self.get_cookie()
-            # check if blog exist
-            if self.exist_blog(blog_id):
-                blog = Blog.get_by_id(int(blog_id))
-                # check if user has liked the post
-                if blog.check_like(name):
-                    like_list = str(blog.like).split(',')
-                    name_index = like_list.index(str(name))
-                    like_list.pop(name_index)
-                    str_like = ','.join(like_list)
-                    blog.like = str_like
-                    blog.put()
-                # something wrong? user clicked too many times?
-                else:
-                    pass
-                # tell user react page
-                if page == '0':
-                    url = '/'
-                else:
-                    url = self.url_from_num(blog_id)
-                self.redirect(url)
-            # the blog doesn't exist
+        name = self.get_cookie()
+        # check if blog exist
+        if self.exist_blog(blog_id):
+            blog = Blog.get_by_id(int(blog_id))
+            # check if user has liked the post
+            if blog.check_like(name):
+                like_list = blog.like
+                name_index = like_list.index(str(name))
+                like_list.pop(name_index)
+                blog.like = like_list
+                blog.put()
+            # something wrong? user clicked too many times?
             else:
-                message = 'We can\'t find the blog.'
-                self.render_message(message, name)
-        # error let user to sign in properly
+                pass
+            # tell user react page
+            url = return_url(blog_id,  page)
+            self.redirect(url)
+            # the blog doesn't exist
         else:
-            self.redirect('/signout')
+            message = 'We can\'t find the blog.'
+            self.render_message(message, name)

@@ -1,8 +1,8 @@
-from util import BlogsHandler
+from bloghandler import BlogsHandler
+from util import signin_required
 import settings
 from models import User
 from models import Blog
-from util import signin_required
 
 
 # page to create a new blog
@@ -18,7 +18,8 @@ class NewBlog(BlogsHandler):
         content = self.request.get("content")
         name = self.get_cookie()
         user = User.get_by_key_name(name)
-        like = str(name)
+        like = []
+        like.append(str(name))
         if title and content:
             blog = Blog(user=user, name=name, title=title,
                         content=content, like=like)

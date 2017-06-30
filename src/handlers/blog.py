@@ -1,4 +1,4 @@
-from util import BlogsHandler
+from bloghandler import BlogsHandler
 import settings
 from models import Blog
 from models import Comment

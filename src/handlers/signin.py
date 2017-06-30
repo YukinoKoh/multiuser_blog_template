@@ -1,4 +1,4 @@
-from util import BlogsHandler
+from bloghandler import BlogsHandler
 import settings
 from models import User
 
@@ -44,7 +44,7 @@ class Signin(BlogsHandler):
         num = int(message_num)
         message = ''
         if num == 1:
-            message = 'Sign in or sign up tp create a post'
+            message = 'Sign in or sign up to respond to a post'
         if num == 2:
             message = 'Sign in or sign up to like posts'
         if num == 3:

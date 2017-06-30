@@ -19,7 +19,7 @@ class Blog(db.Model):
     name = db.StringProperty(required=True)
     title = db.TextProperty(required=True)
     content = db.TextProperty(required=True)
-    like = db.TextProperty(required=True)
+    like = db.ListProperty(item_type=str)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now_add=True)
 
@@ -33,12 +33,13 @@ class Blog(db.Model):
         return cls.name == name
 
     def check_like(cls, name):
-        like_list = str(cls.like).split(',')
+        like_list = cls.like
         return name in like_list
 
     def count_like(cls):
-        like_list = str(cls.like).split(',')
-        count = len(like_list)-1
+        # like_list = str(cls.like).split(',')
+        # count = len(like_list)-1
+        count = len(cls.like)-1
         if count > 0:
             return count
         else:

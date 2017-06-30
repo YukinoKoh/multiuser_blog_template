@@ -1,4 +1,4 @@
-from util import BlogsHandler
+from bloghandler import BlogsHandler
 
 
 class Signout(BlogsHandler):
