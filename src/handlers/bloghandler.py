@@ -117,11 +117,11 @@ class BlogsHandler(webapp2.RequestHandler):
             url = '/blog/'+blog_id
         return url
 
-    # check if blog exist, if so return blog
+    # check if blog exist, if so return the blog
     def exist_blog(self, blog_id):
         return Blog.get_by_id(int(blog_id))
 
-    # check if comment  exist, if so return blog
+    # check if comment  exist, if so return the comment
     def exist_comment(self, comment_id):
         return Comment.get_by_id(int(comment_id))
 

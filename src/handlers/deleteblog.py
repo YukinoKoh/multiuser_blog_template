@@ -40,10 +40,10 @@ class DeleteComment(BlogsHandler):
         if self.user:
             name = self.get_cookie()
             # check if comment exist
-            if exist_comment(comment_id):
+            if self.exist_comment(comment_id):
                 c = Comment.get_by_id(int(comment_id))
                 # check auth
-                if comment.check_auth(name):
+                if c.check_auth(name):
                     c.delete()
                 # error user tryingt o delete someone else's comment
                 else:

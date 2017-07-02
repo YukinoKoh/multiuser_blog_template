@@ -19,15 +19,19 @@ class LikeBlog(BlogsHandler):
         # check if blog exist
         if self.exist_blog(blog_id):
             blog = Blog.get_by_id(int(blog_id))
-            # check if user has liked the post
-            if not blog.check_like(name):
-                like_list = blog.like
-                like_list.append(str(name))
-                blog.like = like_list
-                blog.put()
-            # something wrong? user clicked too many times?
+            # check if author tries to like own post
+            if blog.name == name:
+                 pass
             else:
-                pass
+                # check if user has liked the post
+                if not blog.check_like(name):
+                    like_list = blog.like
+                    like_list.append(str(name))
+                    blog.like = like_list
+                    blog.put()
+                # something wrong? user clicked too many times?
+                else:
+                    pass
             url = return_url(blog_id,  page)
             self.redirect(url)
         # the blog doesn't exist

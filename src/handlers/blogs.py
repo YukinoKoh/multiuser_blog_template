@@ -19,11 +19,20 @@ class MainPage(BlogsHandler):
             pw_hash = self.make_pw_hash(name, settings.SECRET)
             instruction = User(key_name=name, name=name, pw_hash=pw_hash)
             instruction.put()
-        if User.get_by_key_name('Instruction').user_blogs.count() < 1:
-            user_instruction = User.get_by_key_name('Instruction')
-            Blog(user=user_instruction, name='Instruction', title='Sample post',
-                 content='Give vent to what\'s in your mind...',
-                 like=['Instruction']).put()
+        if Blog.all().count() < 1:
+            if User.get_by_key_name('Instruction').user_blogs.count() < 1:
+                user_instruction = User.get_by_key_name('Instruction')
+                Blog(user=user_instruction, name='Instruction',
+                     title='Sample post',
+                     content='Give vent to what\'s in your mind...',
+                     like=['Instruction']).put()
+        else:
+            if User.get_by_key_name('Instruction').user_blogs.count() > 0:
+                for blog in User.get_by_key_name('Instruction').user_blogs:
+                    comments = blog.blog_comments
+                    for c in comments:
+                        c.delete()
+                    blog.delete()
         blogs = Blog.all().order('-created')
         self.render("main.html", name=name, sitename=settings.sitename,
                     blogs=blogs)
