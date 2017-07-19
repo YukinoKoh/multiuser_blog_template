@@ -1,6 +1,6 @@
 /* common */
 body {
-  font-family: "Open Sans Condensed", sans-serif;
+  font-family: "Georgia", sans-serif;
   font-size: 16px;
   margin: 0;
   padding: 0;
@@ -33,24 +33,24 @@ a:hover {
   padding: 0; }
 
 .action-link {
-  color: #7728cf;
+  color: #00d3c4;
   font-weight: lighter;
   letter-spacing: 0.5px; }
 
 .action-link a {
-  color: #7728cf; }
+  color: #00d3c4; }
 
 .action-link a:hover {
-  color: #7728cf; }
+  color: #00d3c4; }
 
 .action-link a:focus {
-  color: #7728cf; }
+  color: #00d3c4; }
 
 .action-link a:link {
-  color: #7728cf; }
+  color: #00d3c4; }
 
 .action-link a:visited {
-  color: #7728cf; }
+  color: #00d3c4; }
 
 .like {
   color: #dcdddf; }
@@ -140,6 +140,7 @@ a:hover {
 .newblog-title, .blog-title {
   width: 100%;
   font-weight: bold;
+  font-family: "Roboto", sans-serif;
   font-size: 28px;
   color: #020202;
   margin-top: 24px;
@@ -166,7 +167,7 @@ a:hover {
   float: left; }
 
 .blog-info a {
-  color: #7728cf; }
+  color: #00d3c4; }
 
 .blog-comment-info {
   font-size: 14px;
@@ -224,7 +225,7 @@ a:hover {
   border-bottom: #dcdddf 2px solid; }
 
 .blogs-title {
-  font-family: "Open Sans Condensed", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: bold;
   font-size: 23px;
   color: #020202;

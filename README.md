@@ -1,4 +1,4 @@
-![blog sample image](img/sample_device.jpg)
+![blog sample image](img/sample_screen.jpg)
 
 It's a  *blog* web app template, using [Google App Engine with Python](https://cloud.google.com/python/) and a Python template engine, [Jinja2](http://jinja.pocoo.org/).
 
@@ -15,8 +15,6 @@ This app includes..
 - Comment on posts
 - Signin checks that makes sure user signed in properly
 - Auth checks that alllows user to delete/edit own posts/comments.
-
-![blog sample image](img/sample_screen.jpg)
 
 
 ## File structure

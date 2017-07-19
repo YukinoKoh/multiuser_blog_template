@@ -1,5 +1,6 @@
-$font: 'Open Sans Condensed', sans-serif;
 
+$font: 'Georgia', sans-serif;
+$font_title: 'Roboto', sans-serif;
 $font_size_1: 28px;
 $font_size_2: 23px;
 $font_size_3: 18px;
@@ -9,7 +10,7 @@ $font_size_6: 10px;
 $font-size: $font_size_4;
 
 $color_brand_2: #80b7d1;
-$color_brand_1: #7728cf;
+$color_brand_1: #00d3c4;
 
 $color_mono: #020202;
 $color_mono_1: #061f26;
@@ -233,6 +234,7 @@ a:hover{
 .newblog-title, .blog-title{
   width: 100%;
   font-weight: bold;
+  font-family: $font_title;
   font-size: $font_size_1;
   color: $color_mono;
   margin-top: $m3;
@@ -345,7 +347,7 @@ a:hover{
 
 
 .blogs-title{
-  font-family: $font;
+  font-family: $font_title;
   font-weight: bold;
   font-size: $font_size_2;
   color: $color_mono;
